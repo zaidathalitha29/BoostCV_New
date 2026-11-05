@@ -58,6 +58,19 @@
 
     <h1>Profil Creator</h1>
 
+    @if (session('success'))
+        <p style="color: green;">
+            {{ session('success') }}
+        </p>
+    @endif
+
+    
+            @if (session('error'))
+                <p style="color: red;">
+                    {{ session('error') }}
+                </p>
+            @endif
+
     @if ($creator)
 
         <div class="profile">
@@ -84,8 +97,7 @@
 
             <p><strong>LinkedIn:</strong> {{ $creator->linkedin }}</p>
 
-            <a href="#" class="button">Edit Profil</a>
-
+            <a href="{{ route('creator.edit') }}">Edit Profil</a>
         </div>
 
     @else

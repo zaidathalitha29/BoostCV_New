@@ -4,6 +4,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CreatorController;
+use App\Http\Controllers\PortfolioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,5 +57,29 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/creator/profile', [CreatorController::class, 'store'])
         ->name('creator.store');
+
+    Route::get('/creator/profile/edit', [CreatorController::class, 'edit'])
+        ->name('creator.edit');
+
+    Route::put('/creator/profile', [CreatorController::class, 'update'])
+        ->name('creator.update');
+
+    // Portfolio Creator
+    Route::get('/creator/portfolio', [PortfolioController::class, 'index'])
+        ->name('portfolio.index');
+
+    Route::get('/creator/portfolio/create', [PortfolioController::class, 'create'])
+        ->name('portfolio.create');
+
+    Route::post('/creator/portfolio', [PortfolioController::class, 'store'])
+        ->name('portfolio.store');
+
+    Route::get('/creator/portfolio/{id}/edit', [PortfolioController::class, 'edit'])
+        ->name('portfolio.edit');
+
+    Route::put('/creator/portfolio/{id}', [PortfolioController::class, 'update'])
+        ->name('portfolio.update');
+
+    Route::delete('/creator/portfolio/{id}', [PortfolioController::class, 'destroy'])
+        ->name('portfolio.destroy');
 });
-```

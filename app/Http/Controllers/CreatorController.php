@@ -24,7 +24,7 @@ class CreatorController extends Controller
     }
 
 
-        public function store(Request $request)
+    public function store(Request $request)
     {
         // Pastikan pengguna sudah login
         if (!Auth::check()) {
@@ -57,6 +57,45 @@ class CreatorController extends Controller
         
         return redirect()->route('creator.profile')
             ->with('success', 'Profil berhasil dibuat!');
+    }
+
+    
+    public function edit()
+    {
+        $creator = Auth::user()->creatorProfile;
+
+        if (!$creator) {
+            return redirect()->route('creator.create')
+                ->with('error', 'Silakan buat profil terlebih dahulu.');
+        }
+
+        return view('creator.edit-profile', compact('creator'));
+    }
+
+    public function update(Request $request)
+    {
+        $creator = Auth::user()->creatorProfile;
+
+        if (!$creator) {
+            return redirect()->route('creator.create')
+                ->with('error', 'Profil Creator belum tersedia.');
+        }
+
+        $validated = $request->validate([
+            'display_name' => 'required|string|max:255',
+            'bio' => 'nullable|string',
+            'profession' => 'nullable|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:25',
+            'website' => 'nullable|url|max:255',
+            'instagram' => 'nullable|string|max:255',
+            'linkedin' => 'nullable|string|max:255',
+        ]);
+
+        $creator->update($validated);
+
+        return redirect()->route('creator.profile')
+            ->with('success', 'Profil berhasil diperbarui!');
     }
 
 }
