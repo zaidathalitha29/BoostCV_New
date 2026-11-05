@@ -10,6 +10,16 @@ use App\User;
 
 class AuthController extends Controller
 {
+    public function showRegister()
+    {
+
+    }
+
+    public function registerProses()
+    {
+
+    }
+
     public function showformlogin()
     {
         return view('login');

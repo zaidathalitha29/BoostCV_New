@@ -1,4 +1,3 @@
-```php
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -15,6 +14,10 @@ use App\Http\Controllers\PortfolioController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Register
+Route::get('/register', [AuthController::class, 'showRegister'])->middleware('guest')->name('register');
+Route::post('/register', [AuthController::class, 'registerProses'])->middleware('guest')->name('register.proses');
 
 // Login dan Logout
 Route::get('/login', [AuthController::class, 'showformlogin'])->name('login');
