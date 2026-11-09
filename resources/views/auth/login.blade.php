@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -229,7 +229,7 @@
         <!-- Register Link -->
         <div class="register-link">
             Belum punya akun?
-            <a href="{{ route('#') }}">Daftar sekarang</a>
+            <a href="{{ route('register') }}">Daftar sekarang</a>
         </div>
 
         <!-- Footer -->

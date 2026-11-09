@@ -1,6 +1,5 @@
-
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -194,13 +193,13 @@
         @endif
 
         <!-- Register Form -->
-        <form action="{{ route("#") }}" method="POST">
+        <form action="{{ route('register') }}" method="POST">
 
             @csrf
             <!-- Nama Lengkap -->
             <div class="form-group">
                 <label for="name">Nama</label>
-                <input type="text" id="name" name="name" placeholder="Masukkan nama lengkap" value="{{ old('name') }}" required>
+                <input type="text" id="name" name="name" placeholder="Masukkan nama lengkap" value="{{ old('name') }}">
                 @error('name')
                     <div class="error-message">
                         {{ $message }}
