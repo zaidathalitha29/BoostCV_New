@@ -21,7 +21,7 @@ Route::post('/register', [AuthController::class, 'registerProses'])->middleware(
 
 // Login dan Logout
 Route::get('/login', [AuthController::class, 'showformlogin'])->name('login');
-Route::post('/proses', [AuthController::class, 'proseslogin'])->name('login.proses');
+Route::post('/login', [AuthController::class, 'proseslogin'])->name('login.proses');
 Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard')->middleware('auth');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
