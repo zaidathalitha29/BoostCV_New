@@ -29,9 +29,7 @@ class AuthController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        Auth::login($user);
-
-        return redirect('/dashboard');
+        return redirect('/login');
     }
 
     public function showformlogin()
