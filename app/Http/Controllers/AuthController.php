@@ -40,30 +40,65 @@ class AuthController extends Controller
     public function proseslogin(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        'email' => 'required|email',
+        'password' => 'required',
         
-        if (Auth::attempt($credentials)) 
-        {
+        ]);
+
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
-        }
+             $user = Auth::user();
+
+            if ($user->role == 'admin') {
+                return redirect('/admin');
+            }
+
+            if ($user->role == 'creator') {
+                return redirect()->route('creator.dashboard');
+            }
+
+            if ($user->role == 'customer') {
+                return redirect()->route('customer.dashboard');
+            }
+
+            Auth::logout();
+
+            return redirect('/login')->withErrors([
+                'email' => 'Role akun tidak dikenali.',
+            ]);
+    }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+            'email' => 'Email atau password tidak sesuai.',
+         ]);
+
     }
 
     public function dashboard()
     {
-        return view('dashboard');
+        $user = Auth::user();
+
+        if ($user->role == 'admin') {
+            return redirect('/admin');
+        }
+
+        if ($user->role == 'creator') {
+            return redirect()->route('creator.dashboard');
+        }
+
+        if ($user->role == 'customer') {
+            return redirect()->route('customer.dashboard');
+        }
+
+        Auth::logout();
+        return redirect('/login');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        Session::flush();
         Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect('/');
     }
 }

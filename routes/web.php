@@ -7,6 +7,15 @@ use App\Http\Controllers\Creator\PortofolioController;
 use App\Http\Controllers\Creator\CreatorDashboardController;
 use App\Http\Controllers\Creator\ServiceController;
 
+// Controller Customer
+use App\Http\Controllers\Customer\DashboardController;
+use App\Http\Controllers\Customer\ServiceController as CustomerServiceController;
+use App\Http\Controllers\Customer\OrderController;
+use App\Http\Controllers\Customer\OrderHistoryController;
+use App\Http\Controllers\Customer\CancellationController;
+use App\Http\Controllers\Customer\RevisionController;
+use App\Http\Controllers\Customer\DownloadController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,7 +46,7 @@ Route::get('/dashboard', [AuthController::class, 'dashboard'])
     ->middleware('auth')
     ->name('dashboard');
 
-Route::get('/logout', [AuthController::class, 'logout'])
+Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
@@ -107,9 +116,67 @@ Route::group(['middleware' => ['auth', 'role:creator']], function () {
 
 // Halaman Customer
 Route::group(['middleware' => ['auth', 'role:customer']], function () {
-    Route::get('/customer', function () {
-        return view('customer');
-    })->name('customer');
+
+    // Dashboard Customer
+    Route::get('/customer', [DashboardController::class, 'index'])
+        ->name('customer.dashboard');
+
+    // Cari Layanan
+    Route::get('/customer/services', [CustomerServiceController::class, 'index'])
+        ->name('customer.services');
+
+    Route::get('/customer/services/{id}', [CustomerServiceController::class, 'show'])
+        ->name('customer.services.show');
+
+    // Pemesanan
+    Route::get('/customer/orders', [OrderController::class, 'index'])
+        ->name('customer.orders');
+
+    Route::get('/customer/services/{serviceId}/order', [OrderController::class, 'create'])
+        ->name('customer.orders.create');
+
+    Route::post('/customer/services/{serviceId}/order', [OrderController::class, 'store'])
+        ->name('customer.orders.store');
+
+    Route::get('/customer/orders/{id}', [OrderController::class, 'show'])
+        ->name('customer.orders.show');
+
+    // Riwayat Pesanan
+    Route::get('/customer/history', [OrderHistoryController::class, 'index'])
+        ->name('customer.history');
+
+    Route::get('/customer/history/{id}', [OrderHistoryController::class, 'show'])
+        ->name('customer.history.show');
+
+    // Pembatalan Pesanan
+    Route::get('/customer/cancellations', [CancellationController::class, 'index'])
+        ->name('customer.cancellations.index');
+
+    Route::get('/customer/orders/{orderId}/cancel', [CancellationController::class, 'create'])
+        ->name('customer.cancellations.create');
+
+    Route::post('/customer/orders/{orderId}/cancel', [CancellationController::class, 'store'])
+        ->name('customer.cancellations.store');
+
+    Route::get('/customer/cancellations/{id}', [CancellationController::class, 'show'])
+        ->name('customer.cancellations.show');
+
+    // Revisi Pesanan
+    Route::get('/customer/revisions', [RevisionController::class, 'index'])
+        ->name('customer.revisions.index');
+
+    Route::get('/customer/orders/{orderId}/revision', [RevisionController::class, 'create'])
+        ->name('customer.revisions.create');
+
+    Route::post('/customer/orders/{orderId}/revision', [RevisionController::class, 'store'])
+        ->name('customer.revisions.store');
+
+    Route::get('/customer/revisions/{id}', [RevisionController::class, 'show'])
+        ->name('customer.revisions.show');
+
+    // Download Hasil CV
+    Route::get('/customer/orders/{id}/download', [DownloadController::class, 'download'])
+        ->name('customer.download');
 });
 
 // Profil Creator

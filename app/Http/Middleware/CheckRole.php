@@ -7,13 +7,6 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckRole
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
     public function handle($request, Closure $next, $role)
     {
         if (!Auth::check()) {
@@ -21,7 +14,10 @@ class CheckRole
         }
 
         $userRole = Auth::user()->role;
-        
+
+        // Mengubah parameter role menjadi array
+        $roles = explode(',', $role);
+
         if (!in_array($userRole, $roles)) {
             return abort(403, 'Unauthorized action.');
         }
