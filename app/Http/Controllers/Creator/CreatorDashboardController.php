@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Creator;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Order;
-use App\Service;
 
 class CreatorDashboardController extends Controller
 {
@@ -28,7 +26,7 @@ class CreatorDashboardController extends Controller
             ->where('status', 'approved')
             ->count();
 
-        $totalPortfolios = $creator->portfolios()->count();
+        $totalPortofolios = $creator->portofolios()->count();
 
         $totalOrders = $creator->orders()->count();
 
@@ -43,7 +41,7 @@ class CreatorDashboardController extends Controller
             'totalServices',
             'pendingServices',
             'approvedServices',
-            'totalPortfolios',
+            'totalPortofolios',
             'totalOrders',
             'recentOrders'
         ));

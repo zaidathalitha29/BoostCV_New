@@ -29,9 +29,9 @@ class Creator extends Model
         return $this->hasMany(Service::class);
     }
 
-    public function portfolios()
+    public function portofolios()
     {
-        return $this->hasMany(Portfolio::class);
+        return $this->hasMany(Portofolio::class);
     }
 
     public function orders()

@@ -2,13 +2,13 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Portfolio | BoostCV</title>
+    <title>Edit Portofolio | BoostCV</title>
 </head>
 <body>
 
-    <h1>Edit Portfolio</h1>
+    <h1>Edit Portofolio</h1>
 
-    <form action="{{ route('portfolio.update', $portfolio->id) }}"
+    <form action="{{ route('portofolio.update', $portofolio->id) }}"
           method="POST"
           enctype="multipart/form-data">
 
@@ -16,9 +16,9 @@
         @method('PUT')
 
         <div>
-            <label>Judul Portfolio</label>
+            <label>Judul Portofolio</label>
             <input type="text" name="title"
-                   value="{{ old('title', $portfolio->title) }}" required>
+                   value="{{ old('title', $portofolio->title) }}" required>
 
             @error('title')
                 <p style="color:red;">{{ $message }}</p>
@@ -29,7 +29,7 @@
 
         <div>
             <label>Deskripsi</label>
-            <textarea name="description">{{ old('description', $portfolio->description) }}</textarea>
+            <textarea name="description">{{ old('description', $portofolio->description) }}</textarea>
 
             @error('description')
                 <p style="color:red;">{{ $message }}</p>
@@ -39,13 +39,13 @@
         <br>
 
         <div>
-            <label>Gambar Portfolio Baru (Opsional)</label>
+            <label>Gambar Portofolio Baru (Opsional)</label>
             <input type="file" name="image" accept="image/*">
 
-            @if ($portfolio->image)
+            @if ($portofolio->image)
                 <p>Gambar saat ini:</p>
-                <img src="{{ asset('storage/' . $portfolio->image) }}"
-                     width="150" alt="Gambar Portfolio">
+                <img src="{{ asset('storage/' . $portofolio->image) }}"
+                     width="150" alt="Gambar Portofolio">
             @endif
 
             @error('image')
@@ -59,7 +59,7 @@
             <label>File Karya Baru (Opsional)</label>
             <input type="file" name="file_path">
 
-            @if ($portfolio->file_path)
+            @if ($portofolio->file_path)
                 <p>File karya sudah tersedia.</p>
             @endif
 
@@ -73,7 +73,7 @@
         <div>
             <label>Link Proyek</label>
             <input type="url" name="project_url"
-                   value="{{ old('project_url', $portfolio->project_url) }}">
+                   value="{{ old('project_url', $portofolio->project_url) }}">
 
             @error('project_url')
                 <p style="color:red;">{{ $message }}</p>
@@ -84,7 +84,7 @@
 
         <button type="submit">Simpan Perubahan</button>
 
-        <a href="{{ route('portfolio.index') }}">Kembali</a>
+        <a href="{{ route('portofolio.index') }}">Kembali</a>
 
     </form>
 

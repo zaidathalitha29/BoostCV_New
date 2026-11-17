@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Portfolio extends Model
+class Portofolio extends Model
 {
     protected $fillable = [
         'creator_id',

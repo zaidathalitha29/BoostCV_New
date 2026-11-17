@@ -2,20 +2,20 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Tambah Portfolio | BoostCV</title>
+    <title>Tambah Portofolio | BoostCV</title>
 </head>
 <body>
 
-    <h1>Tambah Portfolio</h1>
+    <h1>Tambah Portofolio</h1>
 
-    <form action="{{ route('portfolio.store') }}"
+    <form action="{{ route('portofolio.store') }}"
           method="POST"
           enctype="multipart/form-data">
 
         @csrf
 
         <div>
-            <label>Judul Portfolio</label>
+            <label>Judul Portofolio</label>
             <input type="text" name="title"
                    value="{{ old('title') }}" required>
             @error('title')
@@ -36,7 +36,7 @@
         <br>
 
         <div>
-            <label>Gambar Portfolio</label>
+            <label>Gambar Portofolio</label>
             <input type="file" name="image" accept="image/*">
             @error('image')
                 <p style="color:red;">{{ $message }}</p>
@@ -66,9 +66,9 @@
 
         <br>
 
-        <button type="submit">Simpan Portfolio</button>
+        <button type="submit">Simpan Portofolio</button>
 
-        <a href="{{ route('portfolio.index') }}">Kembali</a>
+        <a href="{{ route('portofolio.index') }}">Kembali</a>
 
     </form>
 

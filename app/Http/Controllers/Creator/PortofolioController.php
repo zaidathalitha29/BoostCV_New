@@ -6,11 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Portfolio;
 
-class PortfolioController extends Controller
+class PortofolioController extends Controller
 {
-    // Menampilkan daftar portfolio
     public function index()
     {
         $creator = Auth::user()->creatorProfile;
@@ -20,12 +18,11 @@ class PortfolioController extends Controller
                 ->with('error', 'Silakan buat profil Creator terlebih dahulu.');
         }
 
-        $portfolios = $creator->portfolios()->latest()->get();
+        $portofolios = $creator->portofolios()->latest()->get();
 
-        return view('creator.portfolio.index', compact('portfolios'));
+        return view('creator.portofolio.index', compact('portofolios'));
     }
 
-    // Menampilkan form tambah portfolio
     public function create()
     {
         $creator = Auth::user()->creatorProfile;
@@ -35,10 +32,9 @@ class PortfolioController extends Controller
                 ->with('error', 'Silakan buat profil Creator terlebih dahulu.');
         }
 
-        return view('creator.portfolio.create');
+        return view('creator.portofolio.create');
     }
 
-    // Menyimpan portfolio baru
     public function store(Request $request)
     {
         $creator = Auth::user()->creatorProfile;
@@ -58,21 +54,20 @@ class PortfolioController extends Controller
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')
-                ->store('portfolios/images', 'public');
+                ->store('portofolios/images', 'public');
         }
 
         if ($request->hasFile('file_path')) {
             $validated['file_path'] = $request->file('file_path')
-                ->store('portfolios/files', 'public');
+                ->store('portofolios/files', 'public');
         }
 
-        $creator->portfolios()->create($validated);
+        $creator->portofolios()->create($validated);
 
-        return redirect()->route('portfolio.index')
-            ->with('success', 'Portfolio berhasil ditambahkan!');
+        return redirect()->route('portofolio.index')
+            ->with('success', 'Portofolio berhasil ditambahkan!');
     }
 
-    // Menampilkan form edit portfolio
     public function edit($id)
     {
         $creator = Auth::user()->creatorProfile;
@@ -82,12 +77,11 @@ class PortfolioController extends Controller
                 ->with('error', 'Silakan buat profil Creator terlebih dahulu.');
         }
 
-        $portfolio = $creator->portfolios()->findOrFail($id);
+        $portofolio = $creator->portofolios()->findOrFail($id);
 
-        return view('creator.portfolio.edit', compact('portfolio'));
+        return view('creator.portofolio.edit', compact('portofolio'));
     }
 
-    // Memperbarui portfolio
     public function update(Request $request, $id)
     {
         $creator = Auth::user()->creatorProfile;
@@ -97,7 +91,7 @@ class PortfolioController extends Controller
                 ->with('error', 'Silakan buat profil Creator terlebih dahulu.');
         }
 
-        $portfolio = $creator->portfolios()->findOrFail($id);
+        $portofolio = $creator->portofolios()->findOrFail($id);
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -107,33 +101,30 @@ class PortfolioController extends Controller
             'project_url' => 'nullable|url|max:255',
         ]);
 
-        // Mengganti gambar lama jika ada gambar baru
         if ($request->hasFile('image')) {
-            if ($portfolio->image) {
-                Storage::disk('public')->delete($portfolio->image);
+            if ($portofolio->image) {
+                Storage::disk('public')->delete($portofolio->image);
             }
 
             $validated['image'] = $request->file('image')
-                ->store('portfolios/images', 'public');
+                ->store('portofolios/images', 'public');
         }
 
-        // Mengganti file lama jika ada file baru
         if ($request->hasFile('file_path')) {
-            if ($portfolio->file_path) {
-                Storage::disk('public')->delete($portfolio->file_path);
+            if ($portofolio->file_path) {
+                Storage::disk('public')->delete($portofolio->file_path);
             }
 
             $validated['file_path'] = $request->file('file_path')
-                ->store('portfolios/files', 'public');
+                ->store('portofolios/files', 'public');
         }
 
-        $portfolio->update($validated);
+        $portofolio->update($validated);
 
-        return redirect()->route('portfolio.index')
-            ->with('success', 'Portfolio berhasil diperbarui!');
+        return redirect()->route('portofolio.index')
+            ->with('success', 'Portofolio berhasil diperbarui!');
     }
 
-    // Menghapus portfolio
     public function destroy($id)
     {
         $creator = Auth::user()->creatorProfile;
@@ -143,19 +134,19 @@ class PortfolioController extends Controller
                 ->with('error', 'Silakan buat profil Creator terlebih dahulu.');
         }
 
-        $portfolio = $creator->portfolios()->findOrFail($id);
+        $portofolio = $creator->portofolios()->findOrFail($id);
 
-        if ($portfolio->image) {
-            Storage::disk('public')->delete($portfolio->image);
+        if ($portofolio->image) {
+            Storage::disk('public')->delete($portofolio->image);
         }
 
-        if ($portfolio->file_path) {
-            Storage::disk('public')->delete($portfolio->file_path);
+        if ($portofolio->file_path) {
+            Storage::disk('public')->delete($portofolio->file_path);
         }
 
-        $portfolio->delete();
+        $portofolio->delete();
 
-        return redirect()->route('portfolio.index')
-            ->with('success', 'Portfolio berhasil dihapus!');
+        return redirect()->route('portofolio.index')
+            ->with('success', 'Portofolio berhasil dihapus!');
     }
 }

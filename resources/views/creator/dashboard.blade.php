@@ -270,8 +270,8 @@
                     Profil Saya
                 </a>
 
-                <a href="{{ route('portfolio.index') }}">
-                    Portfolio
+                <a href="{{ route('portofolio.index') }}">
+                    Portofolio
                 </a>
 
                <a href="{{ route('creator.services.index') }}">
@@ -320,8 +320,8 @@
                 </div>
 
                 <div class="card">
-                    <h3>Total Portfolio</h3>
-                    <p>{{ $totalPortfolios }}</p>
+                    <h3>Total Portofolio</h3>
+                    <p>{{ $totalPortofolios }}</p>
                 </div>
 
                 <div class="card">
