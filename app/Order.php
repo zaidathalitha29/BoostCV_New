@@ -35,26 +35,31 @@ class Order extends Model
 
     public function creator()
     {
-        return $this->belongsTo(Creator::class);
+        return $this->belongsTo(Creator::class, 'creator_id');
     }
 
     public function service()
     {
-        return $this->belongsTo(Service::class);
+        return $this->belongsTo(Service::class, 'service_id');
     }
 
     public function payment()
     {
-        return $this->hasOne(Payment::class);
+        return $this->hasOne(Payment::class, 'order_id');
     }
 
     public function revisions()
     {
-        return $this->hasMany(OrderRevision::class);
+        return $this->hasMany(OrderRevision::class, 'order_id');
     }
 
     public function cancellationRequests()
     {
-        return $this->hasMany(CancellationRequest::class);
+        return $this->hasMany(CancellationRequest::class, 'order_id');
+    }
+
+    public function review()
+    {
+        return $this->hasOne(Review::class, 'order_id');
     }
 }

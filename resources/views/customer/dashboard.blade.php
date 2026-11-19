@@ -181,6 +181,62 @@
             background: var(--paper);
         }
 
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            background: var(--paper);
+            color: var(--navy);
+            font-size: 18px;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 4px;
+            border-radius: 20px;
+            background: #C94B3C;
+            color: white;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .profile-label {
+            display: block;
+            margin-top: 3px;
+            font-size: 10px;
+            color: var(--ink-soft);
+            font-weight: 400;
+        }
+
         /* WELCOME */
 
         .welcome {
@@ -227,7 +283,7 @@
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 18px;
             margin-bottom: 23px;
         }
@@ -329,6 +385,46 @@
         .btn-primary:hover {
             background: var(--navy-deep);
             color: white;
+        }
+
+        /* RECOMMENDED SERVICES */
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .service-card {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 17px;
+            background: var(--white);
+        }
+
+        .service-card h4 {
+            color: var(--navy);
+            font-family: 'Fraunces', serif;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .service-card p {
+            color: var(--ink-soft);
+            font-size: 11px;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .service-price {
+            color: var(--gold);
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 13px;
+        }
+
+        .service-card .btn-primary {
+            padding: 9px 13px;
         }
 
         /* ORDERS */
@@ -457,7 +553,15 @@
             }
 
             .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .service-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .profile-name {
+                display: none;
             }
 
             .welcome {
@@ -495,112 +599,95 @@
 
 <body>
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
-
-        <div class="logo">
-            Boost<span>CV</span>
-        </div>
+        <div class="logo">Boost<span>CV</span></div>
 
         <p class="menu-title">OVERVIEW</p>
-
         <nav class="menu">
             <a href="{{ route('customer.dashboard') }}" class="active">
-                <span class="menu-icon">⌂</span>
-                Dashboard
+                <span class="menu-icon">⌂</span> Dashboard
             </a>
         </nav>
 
         <p class="menu-title">LAYANAN CUSTOMER</p>
-
         <nav class="menu">
             <a href="{{ route('customer.services') }}">
-                <span class="menu-icon">▣</span>
-                Cari Jasa CV
+                <span class="menu-icon">▣</span> Cari Jasa CV
             </a>
-
             <a href="{{ route('customer.orders') }}">
-                <span class="menu-icon">▤</span>
-                Pesanan Saya
+                <span class="menu-icon">▤</span> Pesanan Saya
             </a>
-
             <a href="{{ route('customer.history') }}">
-                <span class="menu-icon">◷</span>
-                Riwayat Pesanan
+                <span class="menu-icon">◷</span> Riwayat Pesanan
             </a>
         </nav>
 
         <p class="menu-title">PENGELOLAAN PESANAN</p>
-
         <nav class="menu">
             <a href="{{ route('customer.cancellations.index') }}">
-                <span class="menu-icon">×</span>
-                Pembatalan
+                <span class="menu-icon">×</span> Pembatalan
             </a>
-
             <a href="{{ route('customer.revisions.index') }}">
-                <span class="menu-icon">↻</span>
-                Revisi
+                <span class="menu-icon">↻</span> Revisi
             </a>
         </nav>
 
         <div class="sidebar-bottom">
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button type="submit" class="logout-btn">
-                    ↪ Keluar
-                </button>
+                <button type="submit" class="logout-btn">↪ Keluar</button>
             </form>
         </div>
-
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="main">
 
-        <!-- HEADER -->
         <header class="topbar">
             <div>
                 <h2>Halo, {{ $user->name }}!</h2>
                 <p>Selamat datang kembali di BoostCV.</p>
             </div>
 
-            <div class="profile">
-                {{ strtoupper(substr($user->name, 0, 1)) }}
+            <div class="topbar-actions">
+                <a href="#pesanan-terbaru" class="notification-btn" aria-label="Lihat aktivitas pesanan">
+                    🔔
+                    @if(isset($unreadNotifications) && $unreadNotifications > 0)
+                        <span class="notification-count">{{ $unreadNotifications }}</span>
+                    @endif
+                </a>
+
+                <div class="profile-wrap">
+                    <div class="profile">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                    </div>
+                    <div class="profile-name">
+                        {{ $user->name }}
+                        <span class="profile-label">Customer BoostCV</span>
+                    </div>
+                </div>
             </div>
         </header>
 
-        <!-- NOTIFICATIONS -->
         @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
+            <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
         @if(session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
+            <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
 
-        <!-- WELCOME -->
         <section class="welcome">
-
             <h1>Wujudkan CV Profesionalmu!</h1>
-
             <p>
                 Temukan Creator terbaik dan buat CV yang menarik,
                 profesional, serta sesuai dengan tujuan kariermu.
                 Mulai perjalanan kariermu bersama BoostCV.
             </p>
-
             <a href="{{ route('customer.services') }}" class="btn-gold">
                 Temukan Layanan CV →
             </a>
-
         </section>
 
-        <!-- STATISTICS -->
         <section class="stats">
 
             <div class="stat-card">
@@ -608,7 +695,6 @@
                     <p>Pesanan Aktif</p>
                     <div class="stat-icon">▣</div>
                 </div>
-
                 <h2>{{ $activeOrders }}</h2>
                 <small>Pesanan yang sedang diproses</small>
             </div>
@@ -618,16 +704,31 @@
                     <p>Pesanan Selesai</p>
                     <div class="stat-icon">✓</div>
                 </div>
-
                 <h2>{{ $completedOrders }}</h2>
                 <small>Pesanan berhasil diselesaikan</small>
             </div>
 
+            <div class="stat-card">
+                <div class="stat-top">
+                    <p>Menunggu Pembayaran</p>
+                    <div class="stat-icon">◷</div>
+                </div>
+                <h2>{{ $pendingPaymentOrders ?? 0 }}</h2>
+                <small>Pesanan yang perlu dibayar</small>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <p>Menunggu Revisi</p>
+                    <div class="stat-icon">↻</div>
+                </div>
+                <h2>{{ $revisionOrders ?? 0 }}</h2>
+                <small>Pesanan dalam proses revisi</small>
+            </div>
+
         </section>
 
-        <!-- CARI JASA -->
         <section class="section">
-
             <div class="section-header">
                 <h3>Temukan Layanan CV</h3>
             </div>
@@ -640,24 +741,56 @@
             <a href="{{ route('customer.services') }}" class="btn-primary">
                 Jelajahi Layanan
             </a>
-
         </section>
 
-        <!-- PESANAN TERBARU -->
         <section class="section">
+            <div class="section-header">
+                <h3>Rekomendasi Layanan CV</h3>
+                <a href="{{ route('customer.services') }}">Lihat Semua →</a>
+            </div>
 
+            @if(isset($recommendedServices) && $recommendedServices->count() > 0)
+                <div class="service-grid">
+                    @foreach($recommendedServices as $service)
+                        <div class="service-card">
+                            <h4>{{ $service->title }}</h4>
+
+                            <p>
+                                {{ \Illuminate\Support\Str::limit(
+                                    $service->description ?? 'Layanan pembuatan CV profesional sesuai kebutuhanmu.',
+                                    90
+                                ) }}
+                            </p>
+
+                            <div class="service-price">
+                                Rp{{ number_format($service->price ?? 0, 0, ',', '.') }}
+                            </div>
+
+                            <a href="{{ route('customer.services') }}" class="btn-primary">
+                                Lihat Layanan
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="description">
+                    Layanan dari Creator yang telah disetujui Admin akan tampil di sini.
+                </p>
+
+                <a href="{{ route('customer.services') }}" class="btn-primary">
+                    Jelajahi Semua Layanan
+                </a>
+            @endif
+        </section>
+
+        <section class="section" id="pesanan-terbaru">
             <div class="section-header">
                 <h3>Pesanan Terbaru</h3>
-
-                <a href="{{ route('customer.orders') }}">
-                    Lihat Semua →
-                </a>
+                <a href="{{ route('customer.orders') }}">Lihat Semua →</a>
             </div>
 
             @forelse($latestOrders as $order)
-
                 <div class="order-item">
-
                     <div class="order-info">
                         <strong>
                             {{ $order->service_title ?? ($order->service->title ?? '-') }}
@@ -682,30 +815,20 @@
 
                         {{ $statusLabels[$order->status] ?? ucfirst(str_replace('_', ' ', $order->status)) }}
                     </span>
-
                 </div>
-
             @empty
-
                 <div class="empty">
-
                     <div class="empty-icon">📄</div>
-
                     <h4>Belum Ada Pesanan</h4>
-
                     <p>
                         Kamu belum memiliki pesanan.
                         Yuk, mulai pesan layanan CV pertamamu!
                     </p>
-
                     <a href="{{ route('customer.services') }}" class="btn-primary">
                         Mulai Pesan
                     </a>
-
                 </div>
-
             @endforelse
-
         </section>
 
         <div class="footer">

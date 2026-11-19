@@ -4,202 +4,747 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Riwayat Pesanan - BoostCV</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --ink: #1C2434;
+            --ink-soft: #687184;
+            --paper: #FBFAF7;
+            --white: #FFFFFF;
+            --line: #E9E5DC;
+            --navy: #223A66;
+            --navy-deep: #16264A;
+            --gold: #C98A2C;
+            --gold-soft: #F5E8CF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
-            background: #FBFAF7;
-            color: #1C2434;
+            background: var(--paper);
+            color: var(--ink);
             font-family: 'Inter', sans-serif;
         }
 
-        .main {
-            max-width: 1150px;
-            margin: auto;
-            padding: 45px 25px;
+        a {
+            text-decoration: none;
         }
 
-        h3, h5 {
-            color: #16264A;
+        /* HEADER */
+
+        .topbar {
+            background: var(--navy-deep);
+            padding: 19px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
             font-family: 'Fraunces', serif;
+            font-size: 27px;
+            font-weight: 700;
         }
 
-        h3 { font-size: 30px; margin-bottom: 8px; }
+        .logo span {
+            color: var(--gold);
+        }
+
+        .back-link {
+            color: #E1E7F1;
+            font-size: 12px;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .back-link:hover {
+            color: var(--gold);
+        }
+
+        /* MAIN */
+
+        .main {
+            max-width: 1180px;
+            min-height: calc(100vh - 145px);
+            margin: auto;
+            padding: 48px 25px 65px;
+        }
+
+        .page-heading {
+            margin-bottom: 30px;
+        }
+
+        .eyebrow {
+            color: var(--gold);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .page-heading h1 {
+            font-family: 'Fraunces', serif;
+            color: var(--navy-deep);
+            font-size: 35px;
+            margin-bottom: 9px;
+        }
 
         .subtitle {
-            color: #687184;
-            font-size: 14px;
-            line-height: 1.7;
+            color: var(--ink-soft);
+            font-size: 13px;
+            line-height: 1.8;
         }
 
-        .card {
+        /* INTRO */
+
+        .intro-card {
+            background: var(--navy-deep);
+            border-radius: 15px;
+            padding: 27px 30px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .intro-card::after {
+            content: "";
+            position: absolute;
+            width: 190px;
+            height: 190px;
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 50%;
+            right: 65px;
+            top: -100px;
+        }
+
+        .intro-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .intro-text h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 22px;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .intro-text p {
+            color: #D2DAE8;
+            font-size: 12px;
+            line-height: 1.8;
+            max-width: 560px;
+        }
+
+        .intro-icon {
+            width: 66px;
+            height: 66px;
+            flex-shrink: 0;
+            background: rgba(255,255,255,.10);
+            border: 1px solid rgba(255,255,255,.20);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 29px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ALERT */
+
+        .alert {
+            padding: 14px 18px;
+            border-radius: 9px;
+            margin-bottom: 18px;
+            font-size: 13px;
+        }
+
+        .alert-success {
+            background: #E5F4E9;
+            color: #246B3E;
+        }
+
+        .alert-danger {
+            background: #FCE8E8;
+            color: #A52B2B;
+        }
+
+        /* HISTORY CARD */
+
+        .history-card {
             background: white;
-            border: 1px solid #E4E1D8;
+            border: 1px solid var(--line);
             border-radius: 14px;
             padding: 25px;
-            margin-top: 25px;
-            box-shadow: 0 5px 20px rgba(22,38,74,.05);
+            box-shadow: 0 6px 24px rgba(22,38,74,.04);
         }
 
-        .table-responsive { overflow-x: auto; }
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .section-heading h3 {
+            font-family: 'Fraunces', serif;
+            color: var(--navy-deep);
+            font-size: 21px;
+        }
+
+        .history-count {
+            background: var(--gold-soft);
+            color: #805817;
+            border-radius: 20px;
+            padding: 7px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* TABLE */
+
+        .table-responsive {
+            overflow-x: auto;
+        }
 
         table {
             width: 100%;
-            min-width: 700px;
+            min-width: 760px;
             border-collapse: collapse;
         }
 
         th {
-            background: #F4F2EC;
-            color: #223A66;
+            background: #F6F4EF;
+            color: var(--navy);
             text-align: left;
-            font-size: 12px;
-            padding: 15px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 15px 13px;
+            white-space: nowrap;
+        }
+
+        th:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+
+        th:last-child {
+            border-radius: 0 8px 8px 0;
         }
 
         td {
-            padding: 16px 12px;
-            border-bottom: 1px solid #EEECE6;
-            font-size: 13px;
+            padding: 17px 13px;
+            border-bottom: 1px solid #F0EEE8;
+            font-size: 12px;
+            vertical-align: middle;
         }
+
+        tbody tr:hover td {
+            background: #FCFAF5;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .order-number {
+            color: var(--navy);
+            font-weight: 700;
+        }
+
+        .service-name {
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .price {
+            color: var(--gold);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .date {
+            color: var(--ink-soft);
+            white-space: nowrap;
+        }
+
+        /* STATUS */
 
         .badge {
             display: inline-block;
             padding: 7px 11px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
+            white-space: nowrap;
         }
 
-        .badge-warning { background: #FFF0CF; color: #946000; }
-        .badge-danger { background: #FCE4E4; color: #A52B2B; }
-        .badge-primary { background: #E2EAF8; color: #223A66; }
-        .badge-info { background: #DDF3F5; color: #176C79; }
-        .badge-success { background: #DFF2E5; color: #247443; }
-        .badge-secondary { background: #EAECEF; color: #555E6B; }
+        .badge-warning {
+            background: #FFF0CF;
+            color: #946000;
+        }
+
+        .badge-danger {
+            background: #FCE4E4;
+            color: #A52B2B;
+        }
+
+        .badge-primary {
+            background: #E2EAF8;
+            color: var(--navy);
+        }
+
+        .badge-info {
+            background: #DDF3F5;
+            color: #176C79;
+        }
+
+        .badge-success {
+            background: #DFF2E5;
+            color: #247443;
+        }
+
+        .badge-secondary {
+            background: #EAECEF;
+            color: #555E6B;
+        }
+
+        /* BUTTON */
 
         .btn {
             display: inline-block;
-            padding: 9px 16px;
-            border-radius: 8px;
-            background: #223A66;
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 700;
+            transition: .2s;
+            white-space: nowrap;
         }
 
-        .btn:hover { background: #16264A; color: white; }
+        .btn-primary {
+            background: var(--navy);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--navy-deep);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .btn-gold {
+            display: inline-block;
+            padding: 13px 22px;
+            border-radius: 8px;
+            background: var(--gold);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            transition: .2s;
+        }
+
+        .btn-gold:hover {
+            background: #A96E1B;
+            transform: translateY(-2px);
+        }
+
+        /* EMPTY STATE */
 
         .empty {
             text-align: center;
-            padding: 50px 15px;
+            padding: 48px 20px 42px;
         }
 
-        .empty h5 { font-size: 22px; margin-bottom: 10px; }
-        .empty p { color: #687184; font-size: 13px; margin-bottom: 20px; }
+        .empty-illustration {
+            width: 105px;
+            height: 105px;
+            margin: 0 auto 23px;
+            border-radius: 50%;
+            background: #F8EEDB;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 43px;
+            position: relative;
+        }
 
-        @media(max-width: 600px) {
-            .main { padding: 25px 14px; }
-            h3 { font-size: 25px; }
-            .card { padding: 15px; }
+        .empty-illustration::after {
+            content: "";
+            position: absolute;
+            width: 118px;
+            height: 118px;
+            border: 1px dashed #DCC69F;
+            border-radius: 50%;
+        }
+
+        .empty h2 {
+            font-family: 'Fraunces', serif;
+            color: var(--navy-deep);
+            font-size: 26px;
+            margin-bottom: 11px;
+        }
+
+        .empty > p {
+            max-width: 490px;
+            margin: 0 auto 24px;
+            color: var(--ink-soft);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* STEPS */
+
+        .steps {
+            max-width: 650px;
+            margin: 35px auto 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 13px;
+            text-align: left;
+        }
+
+        .step {
+            padding: 16px 13px;
+            background: #FBFAF7;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+        }
+
+        .step-number {
+            width: 27px;
+            height: 27px;
+            border-radius: 50%;
+            background: var(--gold-soft);
+            color: var(--navy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .step h4 {
+            font-family: 'Fraunces', serif;
+            color: var(--navy);
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .step p {
+            color: var(--ink-soft);
+            font-size: 10px;
+            line-height: 1.7;
+        }
+
+        /* PAGINATION */
+
+        .pagination {
+            margin-top: 25px;
+        }
+
+        .pagination nav {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* FOOTER */
+
+        .footer {
+            text-align: center;
+            padding: 22px 15px;
+            color: var(--ink-soft);
+            font-size: 11px;
+            border-top: 1px solid var(--line);
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 768px) {
+            .topbar {
+                padding: 17px 20px;
+            }
+
+            .main {
+                padding: 32px 17px 45px;
+            }
+
+            .page-heading h1 {
+                font-size: 29px;
+            }
+
+            .intro-card {
+                padding: 23px;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+
+            .history-card {
+                padding: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 23px;
+            }
+
+            .back-link {
+                font-size: 10px;
+            }
+
+            .main {
+                padding: 27px 13px 40px;
+            }
+
+            .page-heading h1 {
+                font-size: 26px;
+            }
+
+            .intro-card {
+                padding: 19px;
+            }
+
+            .intro-text h2 {
+                font-size: 19px;
+            }
+
+            .intro-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 22px;
+            }
+
+            .section-heading h3 {
+                font-size: 18px;
+            }
+
+            .empty {
+                padding: 40px 8px;
+            }
+
+            .empty h2 {
+                font-size: 23px;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<main class="main">
+    <!-- HEADER -->
+    <header class="topbar">
+        <a href="{{ route('customer.dashboard') }}" class="logo">
+            Boost<span>CV</span>
+        </a>
 
-    <h3>Riwayat Pesanan</h3>
-    <p class="subtitle">
-        Lihat kembali seluruh transaksi dan pesanan layanan CV kamu.
-    </p>
+        <a href="{{ route('customer.dashboard') }}" class="back-link">
+            ← Kembali ke Dashboard
+        </a>
+    </header>
 
-    <div class="card">
+    <main class="main">
 
-        @if($orders->count() > 0)
+        <!-- PAGE HEADING -->
+        <section class="page-heading">
+            <div class="eyebrow">CUSTOMER AREA</div>
 
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Nomor Pesanan</th>
-                            <th>Layanan</th>
-                            <th>Harga</th>
-                            <th>Status</th>
-                            <th>Tanggal</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
+            <h1>Riwayat Pesanan</h1>
 
-                    <tbody>
-                        @foreach($orders as $order)
-                            @php
-                                $statusLabels = [
-                                    'pending_payment' => 'Menunggu Pembayaran',
-                                    'payment_rejected' => 'Pembayaran Ditolak',
-                                    'in_progress' => 'Sedang Dikerjakan',
-                                    'revision' => 'Dalam Revisi',
-                                    'completed' => 'Selesai',
-                                    'cancelled' => 'Dibatalkan'
-                                ];
+            <p class="subtitle">
+                Lihat kembali seluruh transaksi dan perjalanan pesanan layanan CV kamu.
+            </p>
+        </section>
 
-                                $statusColors = [
-                                    'pending_payment' => 'warning',
-                                    'payment_rejected' => 'danger',
-                                    'in_progress' => 'primary',
-                                    'revision' => 'info',
-                                    'completed' => 'success',
-                                    'cancelled' => 'secondary'
-                                ];
-                            @endphp
+        <!-- INTRO -->
+        <section class="intro-card">
+            <div class="intro-text">
+                <h2>Semua Perjalanan Pesananmu</h2>
 
+                <p>
+                    Temukan informasi pesanan yang pernah kamu buat,
+                    pantau status pengerjaan, dan buka detail pesanan
+                    kapan saja melalui halaman ini.
+                </p>
+            </div>
+
+            <div class="intro-icon">📚</div>
+        </section>
+
+        <!-- HISTORY CARD -->
+        <section class="history-card">
+
+            <div class="section-heading">
+                <h3>Daftar Riwayat</h3>
+
+                <span class="history-count">
+                    {{ $orders->total() }} Pesanan
+                </span>
+            </div>
+
+            @if($orders->count() > 0)
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
                             <tr>
-                                <td>{{ $loop->iteration + ($orders->currentPage() - 1) * $orders->perPage() }}</td>
-                                <td>{{ $order->order_number }}</td>
-                                <td>{{ $order->service_title }}</td>
-                                <td>Rp {{ number_format($order->price, 0, ',', '.') }}</td>
-                                <td>
-                                    <span class="badge badge-{{ $statusColors[$order->status] ?? 'secondary' }}">
-                                        {{ $statusLabels[$order->status] ?? ucfirst($order->status) }}
-                                    </span>
-                                </td>
-                                <td>{{ $order->created_at->format('d/m/Y') }}</td>
-                                <td>
-                                    <a href="{{ route('customer.history.show', $order->id) }}" class="btn">
-                                        Detail
-                                    </a>
-                                </td>
+                                <th>No.</th>
+                                <th>Nomor Pesanan</th>
+                                <th>Layanan</th>
+                                <th>Harga</th>
+                                <th>Status</th>
+                                <th>Tanggal</th>
+                                <th>Aksi</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
 
-            <div style="margin-top:20px;">
-                {{ $orders->links() }}
-            </div>
+                        <tbody>
 
-        @else
+                            @foreach($orders as $order)
 
-            <div class="empty">
-                <h5>Belum Ada Riwayat Pesanan</h5>
-                <p>Riwayat pesanan kamu akan ditampilkan di sini.</p>
-                <a href="{{ route('customer.services') }}" class="btn">
-                    Cari Layanan CV
-                </a>
-            </div>
+                                @php
+                                    $statusLabels = [
+                                        'pending_payment' => 'Menunggu Pembayaran',
+                                        'payment_rejected' => 'Pembayaran Ditolak',
+                                        'in_progress' => 'Sedang Dikerjakan',
+                                        'revision' => 'Dalam Revisi',
+                                        'completed' => 'Selesai',
+                                        'cancelled' => 'Dibatalkan'
+                                    ];
 
-        @endif
+                                    $statusColors = [
+                                        'pending_payment' => 'warning',
+                                        'payment_rejected' => 'danger',
+                                        'in_progress' => 'primary',
+                                        'revision' => 'info',
+                                        'completed' => 'success',
+                                        'cancelled' => 'secondary'
+                                    ];
+                                @endphp
 
-    </div>
+                                <tr>
+                                    <td>
+                                        {{ $loop->iteration + ($orders->currentPage() - 1) * $orders->perPage() }}
+                                    </td>
 
-</main>
+                                    <td class="order-number">
+                                        {{ $order->order_number }}
+                                    </td>
+
+                                    <td class="service-name">
+                                        {{ $order->service_title ?? ($order->service->title ?? '-') }}
+                                    </td>
+
+                                    <td class="price">
+                                        Rp{{ number_format($order->price, 0, ',', '.') }}
+                                    </td>
+
+                                    <td>
+                                        <span class="badge badge-{{ $statusColors[$order->status] ?? 'secondary' }}">
+                                            {{ $statusLabels[$order->status] ?? ucfirst(str_replace('_', ' ', $order->status)) }}
+                                        </span>
+                                    </td>
+
+                                    <td class="date">
+                                        {{ $order->created_at->format('d/m/Y') }}
+                                    </td>
+
+                                    <td>
+                                        <a href="{{ route('customer.history.show', $order->id) }}"
+                                           class="btn btn-primary">
+                                            Detail →
+                                        </a>
+                                    </td>
+                                </tr>
+
+                            @endforeach
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    {{ $orders->links() }}
+                </div>
+
+            @else
+
+                <!-- EMPTY STATE -->
+                <div class="empty">
+
+                    <div class="empty-illustration">
+                        📚
+                    </div>
+
+                    <h2>Belum Ada Riwayat Pesanan</h2>
+
+                    <p>
+                        Belum ada transaksi atau pesanan yang bisa ditampilkan.
+                        Setelah kamu melakukan pemesanan layanan CV,
+                        seluruh riwayatnya akan tersimpan dan muncul di sini.
+                    </p>
+
+                    <a href="{{ route('customer.services') }}" class="btn-gold">
+                        Cari Layanan CV &nbsp; →
+                    </a>
+
+                    <div class="steps">
+
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <h4>Pilih Layanan</h4>
+                            <p>
+                                Temukan layanan pembuatan CV sesuai kebutuhanmu.
+                            </p>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <h4>Buat Pesanan</h4>
+                            <p>
+                                Pilih Creator dan lakukan pemesanan layanan.
+                            </p>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <h4>Lihat Riwayat</h4>
+                            <p>
+                                Semua pesananmu akan tersimpan di halaman ini.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            @endif
+
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        © {{ date('Y') }} BoostCV. All rights reserved.
+    </footer>
 
 </body>
 </html>

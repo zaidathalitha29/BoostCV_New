@@ -27,21 +27,25 @@ class Service extends Model
         'reviewed_at' => 'datetime',
     ];
 
+    // Relasi ke Creator
     public function creator()
     {
         return $this->belongsTo(Creator::class);
     }
 
+    // Relasi ke Kategori
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
+    // Relasi ke Admin yang meninjau layanan
     public function reviewer()
     {
         return $this->belongsTo(User::class, 'reviewed_by');
     }
 
+    // Relasi ke Pesanan
     public function orders()
     {
         return $this->hasMany(Order::class);

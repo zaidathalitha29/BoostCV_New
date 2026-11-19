@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -110,13 +109,93 @@
             background: #223A66;
             color: white;
             padding: 10px 17px;
+            border: none;
             border-radius: 8px;
             text-decoration: none;
             font-size: 12px;
             font-weight: 600;
+            cursor: pointer;
         }
 
         .btn:hover { background: #16264A; color: white; }
+
+        .alert {
+            padding: 13px 16px;
+            border-radius: 9px;
+            margin-top: 18px;
+            font-size: 13px;
+        }
+
+        .alert-success {
+            background: #DFF2E5;
+            color: #247443;
+        }
+
+        .alert-danger {
+            background: #FCE4E4;
+            color: #A52B2B;
+        }
+
+        .review-form {
+            margin-top: 15px;
+        }
+
+        .review-form label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 9px;
+            color: #223A66;
+        }
+
+        .rating-select {
+            width: 100%;
+            max-width: 220px;
+            padding: 11px;
+            border: 1px solid #E4E1D8;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .review-form textarea {
+            width: 100%;
+            min-height: 110px;
+            padding: 12px;
+            border: 1px solid #E4E1D8;
+            border-radius: 8px;
+            resize: vertical;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .review-form textarea:focus,
+        .rating-select:focus {
+            outline: none;
+            border-color: #223A66;
+        }
+
+        .stars {
+            color: #D69B28;
+            font-size: 21px;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .review-comment {
+            color: #687184;
+            font-size: 13px;
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        .error-text {
+            color: #A52B2B;
+            font-size: 12px;
+            margin-top: -12px;
+            margin-bottom: 15px;
+        }
 
         @media(max-width: 600px) {
             .main { padding: 25px 14px; }
@@ -138,6 +217,18 @@
     <p class="subtitle">
         Informasi lengkap transaksi pesanan layanan CV kamu.
     </p>
+
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <div class="card">
 
@@ -204,6 +295,82 @@
         <div class="info-box">
             {{ $order->creator_note ?: 'Belum ada catatan dari Creator.' }}
         </div>
+
+        <hr class="divider">
+
+        <h5>Ulasan Layanan</h5>
+
+        @if($order->review)
+
+            <div class="info-box">
+                <div class="stars">
+                    @for($i = 1; $i <= 5; $i++)
+                        {{ $i <= $order->review->rating ? '★' : '☆' }}
+                    @endfor
+                </div>
+
+                <p class="review-comment">
+                    {{ $order->review->comment ?: 'Tidak ada komentar.' }}
+                </p>
+
+                <p style="font-size:11px;color:#687184;margin-top:12px;">
+                    Dikirim pada:
+                    {{ $order->review->created_at->format('d F Y, H:i') }}
+                </p>
+            </div>
+
+        @elseif($order->status === 'completed')
+
+            <p class="subtitle" style="margin-bottom:15px;">
+                Pesanan sudah selesai. Berikan penilaian untuk layanan Creator.
+            </p>
+
+            <form
+                action="{{ route('customer.history.review.store', $order->id) }}"
+                method="POST"
+                class="review-form"
+            >
+                @csrf
+
+                <label for="rating">Rating</label>
+
+                <select name="rating" id="rating" class="rating-select" required>
+                    <option value="">Pilih rating</option>
+                    <option value="5" {{ old('rating') == 5 ? 'selected' : '' }}>5 - Sangat Baik</option>
+                    <option value="4" {{ old('rating') == 4 ? 'selected' : '' }}>4 - Baik</option>
+                    <option value="3" {{ old('rating') == 3 ? 'selected' : '' }}>3 - Cukup</option>
+                    <option value="2" {{ old('rating') == 2 ? 'selected' : '' }}>2 - Kurang</option>
+                    <option value="1" {{ old('rating') == 1 ? 'selected' : '' }}>1 - Sangat Kurang</option>
+                </select>
+
+                @error('rating')
+                    <p class="error-text">{{ $message }}</p>
+                @enderror
+
+                <label for="comment">Komentar</label>
+
+                <textarea
+                    name="comment"
+                    id="comment"
+                    placeholder="Bagikan pengalaman kamu menggunakan layanan ini..."
+                >{{ old('comment') }}</textarea>
+
+                @error('comment')
+                    <p class="error-text">{{ $message }}</p>
+                @enderror
+
+                <button type="submit" class="btn">
+                    Kirim Ulasan
+                </button>
+            </form>
+
+        @else
+
+            <div class="info-box">
+                Ulasan baru dapat diberikan setelah pesanan berstatus selesai.
+            </div>
+
+        @endif
 
         <hr class="divider">
 

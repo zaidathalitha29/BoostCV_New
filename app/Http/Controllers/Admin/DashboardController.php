@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\User;
-use App\Order;
+use App\Creator;
 use App\Service;
+use App\Order;
 use App\Payment;
 
 class DashboardController extends Controller
@@ -13,33 +14,38 @@ class DashboardController extends Controller
     public function index()
     {
         $totalUsers = User::count();
-        $totalCreators = User::where('role', 'creator')->count();
-        $totalCustomers = User::where('role', 'customer')->count();
-
+        $totalCreators = Creator::count();
         $totalServices = Service::count();
-        $pendingServices = Service::where('status', 'pending')->count();
-
         $totalOrders = Order::count();
+
+        $totalPayments = Payment::count();
+
         $pendingPayments = Payment::where(
             'status',
             'pending_verification'
         )->count();
 
-        $recentOrders = Order::with([
-            'customer',
-            'creator',
-            'service'
-        ])->latest()->take(5)->get();
+        $verifiedPayments = Payment::where(
+            'status',
+            'verified'
+        )->count();
+
+        $recentPayments = Payment::with([
+            'order.customer'
+        ])
+        ->latest()
+        ->take(5)
+        ->get();
 
         return view('admin.dashboard', compact(
             'totalUsers',
             'totalCreators',
-            'totalCustomers',
             'totalServices',
-            'pendingServices',
             'totalOrders',
+            'totalPayments',
             'pendingPayments',
-            'recentOrders'
+            'verifiedPayments',
+            'recentPayments'
         ));
     }
 }

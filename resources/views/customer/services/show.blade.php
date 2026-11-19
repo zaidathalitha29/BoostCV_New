@@ -39,12 +39,18 @@
         }
 
         .sidebar {
-            width: 250px;
-            min-height: 100vh;
+            width: 260px;
+            height: 100vh;
             position: fixed;
+            top: 0;
+            left: 0;
             background: var(--navy-deep);
             padding: 28px 20px;
             color: white;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 100;
         }
 
         .logo {
@@ -63,17 +69,25 @@
         .menu-title {
             color: #AAB7CE;
             font-size: 11px;
+            font-weight: 600;
             letter-spacing: 1px;
-            margin: 22px 0 12px 10px;
+            margin: 0 0 12px 10px;
+        }
+
+        .menu {
+            margin-bottom: 25px;
         }
 
         .menu a {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             color: #D8DFEC;
             padding: 13px 14px;
             margin-bottom: 6px;
             border-radius: 8px;
             font-size: 13px;
+            transition: .2s;
         }
 
         .menu a:hover,
@@ -82,11 +96,14 @@
             color: white;
         }
 
+        .menu a.active {
+            border-left: 3px solid var(--gold);
+        }
+
         .sidebar-bottom {
-            position: absolute;
-            bottom: 25px;
-            left: 20px;
-            right: 20px;
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,.18);
+            padding-top: 18px;
         }
 
         .logout-btn {
@@ -97,27 +114,37 @@
             color: #F0B5A5;
             border-radius: 25px;
             cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: #8B3C36;
+            color: white;
         }
 
         .main {
-            margin-left: 250px;
-            padding: 30px;
+            margin-left: 260px;
+            padding: 25px 30px 45px;
+            min-height: 100vh;
         }
 
         .topbar {
             background: white;
             border: 1px solid var(--line);
             border-radius: 12px;
-            padding: 20px 23px;
+            padding: 18px 22px;
             margin-bottom: 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 15px;
         }
 
         .topbar h2 {
             font-family: 'Fraunces', serif;
-            font-size: 23px;
+            font-size: 21px;
         }
 
         .topbar p {
@@ -129,8 +156,10 @@
         .profile {
             width: 42px;
             height: 42px;
+            flex-shrink: 0;
             background: var(--gold-soft);
             color: var(--navy);
+            border: 1px solid var(--gold);
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -151,7 +180,7 @@
 
         .detail-grid {
             display: grid;
-            grid-template-columns: 1.6fr 1fr;
+            grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
             gap: 22px;
             align-items: start;
         }
@@ -165,7 +194,7 @@
         }
 
         .service-banner {
-            height: 190px;
+            height: 240px;
             background: linear-gradient(135deg, var(--navy-deep), var(--navy));
             border-radius: 10px;
             display: flex;
@@ -174,6 +203,13 @@
             color: var(--gold-soft);
             font-size: 55px;
             margin-bottom: 23px;
+            overflow: hidden;
+        }
+
+        .service-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .category {
@@ -193,7 +229,9 @@
 
         .service-title {
             font-size: 30px;
+            color: var(--navy-deep);
             margin-bottom: 13px;
+            line-height: 1.4;
         }
 
         .description {
@@ -201,23 +239,61 @@
             color: var(--ink-soft);
             line-height: 1.9;
             white-space: pre-line;
+            overflow-wrap: anywhere;
         }
 
         .card h3 {
             font-size: 20px;
+            color: var(--navy-deep);
             margin-bottom: 17px;
+        }
+
+        .creator-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .creator-avatar {
+            width: 55px;
+            height: 55px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: var(--gold-soft);
+            color: var(--navy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fraunces', serif;
+            font-size: 23px;
+            font-weight: 700;
+            overflow: hidden;
+        }
+
+        .creator-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .creator-name {
             font-weight: 700;
             font-size: 15px;
-            margin-bottom: 8px;
+            color: var(--navy);
+            margin-bottom: 5px;
+        }
+
+        .creator-profession {
+            color: var(--ink-soft);
+            font-size: 11px;
         }
 
         .creator-description {
             color: var(--ink-soft);
             font-size: 12px;
             line-height: 1.8;
+            white-space: pre-line;
         }
 
         .price-label {
@@ -243,7 +319,7 @@
             font-size: 12px;
         }
 
-        .info-row:last-child {
+        .info-row:last-of-type {
             border-bottom: none;
         }
 
@@ -252,24 +328,19 @@
         }
 
         .info-row strong {
+            color: var(--navy);
             text-align: right;
         }
 
-        .btn-order {
-            display: block;
-            background: var(--gold);
-            color: white;
-            padding: 14px;
+        .notice {
+            background: var(--paper);
+            border: 1px solid var(--line);
             border-radius: 8px;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 700;
+            padding: 13px;
             margin-top: 20px;
-        }
-
-        .btn-order:hover {
-            background: #A96E1B;
-            color: white;
+            font-size: 11px;
+            color: var(--ink-soft);
+            line-height: 1.7;
         }
 
         .btn-back {
@@ -280,6 +351,7 @@
             border-radius: 7px;
             font-size: 12px;
             margin-top: 20px;
+            transition: .2s;
         }
 
         .btn-back:hover {
@@ -294,7 +366,7 @@
             margin-top: 35px;
         }
 
-        @media(max-width: 900px) {
+        @media(max-width: 1000px) {
             .detail-grid {
                 grid-template-columns: 1fr;
             }
@@ -304,12 +376,11 @@
             .sidebar {
                 position: relative;
                 width: 100%;
-                min-height: auto;
+                height: auto;
             }
 
             .sidebar-bottom {
-                position: static;
-                margin-top: 20px;
+                margin-top: 10px;
             }
 
             .main {
@@ -321,10 +392,32 @@
                 font-size: 25px;
             }
         }
+
+        @media(max-width: 480px) {
+            .main {
+                padding: 13px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .service-banner {
+                height: 190px;
+            }
+        }
     </style>
 </head>
 
 <body>
+
+@php
+    $user = auth()->user();
+    $creator = $service->creator;
+    $creatorName = $creator->display_name
+        ?? optional($creator->user)->name
+        ?? 'Creator BoostCV';
+@endphp
 
 <aside class="sidebar">
 
@@ -333,28 +426,51 @@
     <p class="menu-title">OVERVIEW</p>
 
     <nav class="menu">
-        <a href="{{ route('customer.dashboard') }}">⌂ Dashboard</a>
+        <a href="{{ route('customer.dashboard') }}">
+            <span>⌂</span>
+            Dashboard
+        </a>
     </nav>
 
     <p class="menu-title">LAYANAN CUSTOMER</p>
 
     <nav class="menu">
-        <a href="{{ route('customer.services') }}" class="active">▣ Cari Jasa CV</a>
-        <a href="{{ route('customer.orders') }}">▤ Pesanan Saya</a>
-        <a href="{{ route('customer.history') }}">◷ Riwayat Pesanan</a>
+        <a href="{{ route('customer.services') }}" class="active">
+            <span>▣</span>
+            Cari Jasa CV
+        </a>
+
+        <a href="{{ route('customer.orders') }}">
+            <span>▤</span>
+            Pesanan Saya
+        </a>
+
+        <a href="{{ route('customer.history') }}">
+            <span>◷</span>
+            Riwayat Pesanan
+        </a>
     </nav>
 
     <p class="menu-title">PENGELOLAAN PESANAN</p>
 
     <nav class="menu">
-        <a href="{{ route('customer.cancellations.index') }}">× Pembatalan</a>
-        <a href="{{ route('customer.revisions.index') }}">↻ Revisi</a>
+        <a href="{{ route('customer.cancellations.index') }}">
+            <span>×</span>
+            Pembatalan
+        </a>
+
+        <a href="{{ route('customer.revisions.index') }}">
+            <span>↻</span>
+            Revisi
+        </a>
     </nav>
 
     <div class="sidebar-bottom">
         <form action="{{ route('logout') }}" method="POST">
             @csrf
-            <button type="submit" class="logout-btn">↪ Keluar</button>
+            <button type="submit" class="logout-btn">
+                ↪ Keluar
+            </button>
         </form>
     </div>
 
@@ -369,7 +485,7 @@
         </div>
 
         <div class="profile">
-            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+            {{ strtoupper(substr($user->name ?? 'C', 0, 1)) }}
         </div>
     </header>
 
@@ -377,7 +493,8 @@
         <a href="{{ route('customer.dashboard') }}">Dashboard</a>
         /
         <a href="{{ route('customer.services') }}">Cari Jasa CV</a>
-        / Detail Layanan
+        /
+        Detail Layanan
     </div>
 
     <div class="detail-grid">
@@ -386,10 +503,21 @@
 
             <section class="card">
 
-                <div class="service-banner">✦</div>
+                <div class="service-banner">
+
+                    @if($service->thumbnail)
+                        <img
+                            src="{{ asset('storage/' . $service->thumbnail) }}"
+                            alt="Thumbnail {{ $service->title }}"
+                        >
+                    @else
+                        ✦
+                    @endif
+
+                </div>
 
                 <span class="category">
-                    {{ $service->category->name ?? 'Umum' }}
+                    {{ optional($service->category)->name ?? 'Umum' }}
                 </span>
 
                 <h1 class="service-title">
@@ -397,7 +525,7 @@
                 </h1>
 
                 <p class="description">
-                    {{ $service->description ?? 'Belum ada deskripsi layanan.' }}
+                    {{ $service->description ?: 'Belum ada deskripsi layanan.' }}
                 </p>
 
             </section>
@@ -406,14 +534,35 @@
 
                 <h3>Informasi Creator</h3>
 
-                <div class="creator-name">
-                    {{ $service->creator->user->name ?? 'Creator BoostCV' }}
+                <div class="creator-header">
+
+                    <div class="creator-avatar">
+
+                        @if($creator && $creator->photo)
+                            <img
+                                src="{{ asset('storage/' . $creator->photo) }}"
+                                alt="Foto {{ $creatorName }}"
+                            >
+                        @else
+                            {{ strtoupper(substr($creatorName, 0, 1)) }}
+                        @endif
+
+                    </div>
+
+                    <div>
+                        <div class="creator-name">
+                            {{ $creatorName }}
+                        </div>
+
+                        <div class="creator-profession">
+                            {{ $creator->profession ?? 'Creator BoostCV' }}
+                        </div>
+                    </div>
+
                 </div>
 
                 <p class="creator-description">
-                    Layanan ini disediakan oleh Creator BoostCV.
-                    Silakan lihat informasi layanan dan ketentuan
-                    sebelum melakukan pemesanan.
+                    {{ $creator->bio ?? 'Creator ini belum menambahkan deskripsi profil.' }}
                 </p>
 
             </section>
@@ -432,25 +581,34 @@
 
                 <div class="info-row">
                     <span>Kategori</span>
-                    <strong>{{ $service->category->name ?? 'Umum' }}</strong>
+                    <strong>
+                        {{ optional($service->category)->name ?? 'Umum' }}
+                    </strong>
+                </div>
+
+                <div class="info-row">
+                    <span>Estimasi Pengerjaan</span>
+                    <strong>
+                        {{ $service->estimated_days }} Hari
+                    </strong>
                 </div>
 
                 <div class="info-row">
                     <span>Batas Revisi</span>
-                    <strong>{{ $service->revision_limit ?? 0 }} kali</strong>
+                    <strong>
+                        {{ $service->revision_limit }} Kali
+                    </strong>
                 </div>
 
                 <div class="info-row">
-                    <span>Durasi Pengerjaan</span>
-                    <strong>{{ $service->duration ?? '-' }}</strong>
+                    <span>Penyedia Layanan</span>
+                    <strong>{{ $creatorName }}</strong>
                 </div>
 
-                <a
-                    href="{{ route('customer.orders.create', $service->id) }}"
-                    class="btn-order"
-                >
-                    Pesan Layanan Sekarang →
-                </a>
+                <div class="notice">
+                    Periksa deskripsi, harga, estimasi pengerjaan, dan batas revisi
+                    sebelum melanjutkan pemesanan.
+                </div>
 
                 <a
                     href="{{ route('customer.services') }}"

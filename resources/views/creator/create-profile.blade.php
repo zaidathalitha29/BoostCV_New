@@ -1,102 +1,789 @@
+
 <!DOCTYPE html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buat Profil Creator | BoostCV</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Buat Profil Creator - BoostCV</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
-            padding: 30px;
+        :root {
+            --ink: #1C2434;
+            --ink-soft: #4B5468;
+            --paper: #FBFAF7;
+            --white: #FFFFFF;
+            --line: #E4E1D8;
+            --navy: #223A66;
+            --navy-deep: #16264A;
+            --gold: #C98A2C;
+            --gold-soft: #F3E2C2;
         }
 
-        .container {
-            max-width: 650px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-        }
-
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 7px;
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 6px;
         }
 
-        textarea {
-            height: 100px;
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
         }
 
-        button {
-            margin-top: 20px;
-            padding: 12px 20px;
-            background: #2563eb;
+        a {
+            text-decoration: none;
+        }
+
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: var(--navy-deep);
             color: white;
-            border: none;
-            border-radius: 6px;
+            padding: 28px 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 29px;
+            font-weight: 700;
+            color: white;
+            padding: 5px 10px 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.18);
+            margin-bottom: 28px;
+        }
+
+        .logo span {
+            color: var(--gold);
+        }
+
+        .menu-title {
+            color: #AAB7CE;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin: 0 0 12px 10px;
+        }
+
+        .menu {
+            margin-bottom: 27px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #D8DFEC;
+            padding: 13px 14px;
+            margin-bottom: 6px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: var(--navy);
+            color: white;
+        }
+
+        .menu a.active {
+            border-left: 3px solid var(--gold);
+        }
+
+        .menu-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.18);
+            padding-top: 18px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid #D98B75;
+            color: #F0B5A5;
+            padding: 12px;
+            border-radius: 25px;
             cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: #8B3C36;
+            color: white;
+        }
+
+        .main {
+            margin-left: 260px;
+            padding: 25px 30px 45px;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 18px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .topbar h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 21px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .topbar p {
+            color: var(--ink-soft);
+            font-size: 12px;
+        }
+
+        .profile {
+            width: 42px;
+            height: 42px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--navy);
+            font-family: 'Fraunces', serif;
+            font-weight: 600;
+            background: var(--paper);
+        }
+
+        .profile-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .profile-label {
+            display: block;
+            margin-top: 3px;
+            font-size: 10px;
+            color: var(--ink-soft);
+            font-weight: 400;
+        }
+
+        .page-heading {
+            margin-bottom: 23px;
+        }
+
+        .page-heading h1 {
+            font-family: 'Fraunces', serif;
+            font-size: 27px;
+            color: var(--navy-deep);
+            margin-bottom: 8px;
+        }
+
+        .page-heading p {
+            font-size: 13px;
+            color: var(--ink-soft);
+            line-height: 1.7;
+        }
+
+        .form-card {
+            background: var(--white);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 28px;
+            max-width: 950px;
+        }
+
+        .form-section-title {
+            font-family: 'Fraunces', serif;
+            font-size: 19px;
+            color: var(--navy-deep);
+            margin-bottom: 8px;
+        }
+
+        .form-description {
+            color: var(--ink-soft);
+            font-size: 12px;
+            line-height: 1.7;
+            margin-bottom: 23px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .required {
+            color: #C94B3C;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--gold);
+            background: white;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.7;
+        }
+
+        .form-hint {
+            font-size: 10px;
+            color: var(--ink-soft);
+        }
+
+        .file-input {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: #C0392B;
+            font-size: 11px;
+        }
+
+        .alert-danger {
+            padding: 13px 16px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            background: #FBE8E5;
+            color: #963C32;
+            font-size: 12px;
+        }
+
+        .alert-success {
+            padding: 13px 16px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            background: #E7F4EA;
+            color: #28613A;
+            font-size: 12px;
+        }
+
+        .form-divider {
+            border: none;
+            border-top: 1px solid var(--line);
+            margin: 28px 0;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--navy);
+            color: white;
+            padding: 12px 21px;
+            border-radius: 7px;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--navy-deep);
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            background: white;
+            color: var(--ink-soft);
+            border: 1px solid var(--line);
+            padding: 12px 21px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .btn-secondary:hover {
+            background: var(--paper);
+        }
+
+        .footer {
+            color: var(--ink-soft);
+            font-size: 11px;
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 18px;
+            }
+
+            .logo {
+                margin-bottom: 18px;
+                padding-bottom: 15px;
+            }
+
+            .menu {
+                margin-bottom: 12px;
+            }
+
+            .menu a {
+                display: inline-flex;
+                padding: 10px;
+                font-size: 11px;
+            }
+
+            .menu-title {
+                margin-top: 12px;
+            }
+
+            .sidebar-bottom {
+                margin-top: 10px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 18px;
+            }
+
+            .profile-name {
+                display: none;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .form-card {
+                padding: 18px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .form-actions a,
+            .form-actions button {
+                text-align: center;
+                width: 100%;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="container">
+@php
+    $user = auth()->user();
+@endphp
 
-    <h1>Buat Profil Creator</h1>
-    <p>Lengkapi informasi profil profesional kamu.</p>
+<aside class="sidebar">
 
-    <form action="{{ route('creator.store') }}" method="POST">
-        @csrf
+    <div class="logo">
+        Boost<span>CV</span>
+    </div>
 
-        <label>Nama Creator</label>
-        <input type="text" name="display_name"
-               value="{{ old('display_name') }}" required>
+    <p class="menu-title">OVERVIEW</p>
 
-        <label>Bio</label>
-        <textarea name="bio">{{ old('bio') }}</textarea>
+    <nav class="menu">
+        <a href="{{ route('creator.dashboard') }}">
+            <span class="menu-icon">⌂</span>
+            Dashboard
+        </a>
+    </nav>
 
-        <label>Profesi</label>
-        <input type="text" name="profession"
-               value="{{ old('profession') }}">
+    <p class="menu-title">PENGELOLAAN CREATOR</p>
 
-        <label>Lokasi</label>
-        <input type="text" name="location"
-               value="{{ old('location') }}">
+    <nav class="menu">
+        <a href="{{ route('creator.profile') }}" class="active">
+            <span class="menu-icon">♙</span>
+            Profil Saya
+        </a>
 
-        <label>Nomor Telepon</label>
-        <input type="text" name="phone"
-               value="{{ old('phone') }}">
+        <a href="{{ route('creator.services.index') }}">
+            <span class="menu-icon">▣</span>
+            Layanan Saya
+        </a>
 
-        <label>Website</label>
-        <input type="url" name="website"
-               value="{{ old('website') }}">
+        <a href="{{ route('creator.portofolio.index') }}">
+            <span class="menu-icon">▤</span>
+            Portofolio
+        </a>
+    </nav>
 
-        <label>Instagram</label>
-        <input type="text" name="instagram"
-               value="{{ old('instagram') }}">
+    <p class="menu-title">AKTIVITAS</p>
 
-        <label>LinkedIn</label>
-        <input type="text" name="linkedin"
-               value="{{ old('linkedin') }}">
+    <nav class="menu">
+        <a href="{{ route('creator.orders.index') }}">
+            <span class="menu-icon">▧</span>
+            Pesanan Masuk
+        </a>
 
-        <button type="submit">Simpan Profil</button>
+        <a href="{{ route('creator.reviews.index') }}">
+            <span class="menu-icon">☆</span>
+            Ulasan Customer
+        </a>
 
-    </form>
+        <a href="{{ route('creator.notifications.index') }}">
+            <span class="menu-icon">♧</span>
+            Notifikasi
+        </a>
+    </nav>
 
-</div>
+    <p class="menu-title">KEUANGAN</p>
+
+    <nav class="menu">
+        <a href="{{ route('creator.earnings.index') }}">
+            <span class="menu-icon">Rp</span>
+            Pendapatan
+        </a>
+
+        <a href="{{ route('creator.payouts.index') }}">
+            <span class="menu-icon">⇧</span>
+            Pencairan Dana
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+
+            <button type="submit" class="logout-btn">
+                ↪ Keluar
+            </button>
+        </form>
+    </div>
+
+</aside>
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <h2>Buat Profil Creator</h2>
+            <p>Lengkapi informasi profil profesionalmu.</p>
+        </div>
+
+        <div class="profile-wrap">
+            <div class="profile">
+                {{ strtoupper(substr($user->name, 0, 1)) }}
+            </div>
+
+            <div class="profile-name">
+                {{ $user->name }}
+                <span class="profile-label">Creator BoostCV</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-heading">
+        <h1>Lengkapi Profil Creator</h1>
+        <p>
+            Isi informasi berikut agar Customer dapat mengenal
+            keahlian dan layanan yang kamu tawarkan.
+        </p>
+    </div>
+
+    @if(session('error'))
+        <div class="alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if(session('success'))
+        <div class="alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="alert-danger">
+            <strong>Periksa kembali data yang kamu masukkan:</strong>
+
+            <ul style="margin: 8px 0 0 18px;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <section class="form-card">
+
+        <h3 class="form-section-title">Informasi Profil</h3>
+
+        <p class="form-description">
+            Lengkapi data diri dan informasi profesionalmu.
+            Kolom bertanda (*) wajib diisi.
+        </p>
+
+        <form action="{{ route('creator.store') }}"
+              method="POST"
+              enctype="multipart/form-data">
+
+            @csrf
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="display_name">
+                        Nama Lengkap <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="display_name"
+                        name="display_name"
+                        class="form-control"
+                        value="{{ old('display_name', $user->name) }}"
+                        placeholder="Masukkan nama lengkap"
+                        required
+                    >
+
+                    @error('display_name')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Nomor Telepon</label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        class="form-control"
+                        value="{{ old('phone') }}"
+                        placeholder="Contoh: 081234567890"
+                    >
+
+                    @error('phone')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="profession">Profesi / Keahlian Utama</label>
+
+                    <input
+                        type="text"
+                        id="profession"
+                        name="profession"
+                        class="form-control"
+                        value="{{ old('profession') }}"
+                        placeholder="Contoh: CV Designer"
+                    >
+
+                    @error('profession')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Alamat</label>
+
+                    <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        class="form-control"
+                        value="{{ old('location') }}"
+                        placeholder="Masukkan alamat"
+                    >
+
+                    @error('location')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-group full">
+                    <label for="photo">Foto Profil</label>
+
+                    <input
+                        type="file"
+                        id="photo"
+                        name="photo"
+                        class="form-control file-input"
+                        accept="image/jpeg,image/png,image/jpg,image/webp"
+                    >
+
+                    <span class="form-hint">
+                        Format JPG, JPEG, PNG, atau WEBP. Maksimal 2 MB.
+                    </span>
+
+                    @error('photo')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+
+            </div>
+
+            <hr class="form-divider">
+
+            <h3 class="form-section-title">Informasi Profesional</h3>
+
+            <p class="form-description">
+                Ceritakan pengalaman dan informasi profesional yang kamu miliki.
+            </p>
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+                    <label for="bio">Deskripsi Diri</label>
+
+                    <textarea
+                        id="bio"
+                        name="bio"
+                        class="form-control"
+                        placeholder="Ceritakan tentang dirimu, pengalaman, dan layanan yang kamu kuasai..."
+                    >{{ old('bio') }}</textarea>
+
+                    @error('bio')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="website">Website</label>
+
+                    <input
+                        type="url"
+                        id="website"
+                        name="website"
+                        class="form-control"
+                        value="{{ old('website') }}"
+                        placeholder="https://contoh.com"
+                    >
+
+                    @error('website')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="instagram">Instagram</label>
+
+                    <input
+                        type="text"
+                        id="instagram"
+                        name="instagram"
+                        class="form-control"
+                        value="{{ old('instagram') }}"
+                        placeholder="@username"
+                    >
+
+                    @error('instagram')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-group full">
+                    <label for="linkedin">LinkedIn</label>
+
+                    <input
+                        type="text"
+                        id="linkedin"
+                        name="linkedin"
+                        class="form-control"
+                        value="{{ old('linkedin') }}"
+                        placeholder="URL atau username LinkedIn"
+                    >
+
+                    @error('linkedin')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+
+                <a href="{{ route('creator.dashboard') }}"
+                   class="btn-secondary">
+                    Kembali
+                </a>
+
+                <button type="submit" class="btn-primary">
+                    Simpan Profil
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+    <div class="footer">
+        © {{ date('Y') }} BoostCV. All rights reserved.
+    </div>
+
+</main>
 
 </body>
 </html>

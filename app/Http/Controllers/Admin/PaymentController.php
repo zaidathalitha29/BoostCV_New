@@ -5,9 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
+    /**
+     * Menampilkan daftar pembayaran.
+     */
     public function index(Request $request)
     {
         $payments = Payment::with([
@@ -25,6 +29,9 @@ class PaymentController extends Controller
         return view('admin.payments.index', compact('payments'));
     }
 
+    /**
+     * Menampilkan detail pembayaran.
+     */
     public function show($id)
     {
         $payment = Payment::with([
@@ -37,6 +44,9 @@ class PaymentController extends Controller
         return view('admin.payments.show', compact('payment'));
     }
 
+    /**
+     * Memverifikasi pembayaran.
+     */
     public function verify($id)
     {
         $payment = Payment::with('order')->findOrFail($id);
@@ -45,25 +55,30 @@ class PaymentController extends Controller
             return back()->with('error', 'Pembayaran ini tidak menunggu verifikasi.');
         }
 
-        if ($payment->order->status != 'pending_payment') {
+        if (!$payment->order || $payment->order->status != 'pending_payment') {
             return back()->with('error', 'Status pesanan tidak sesuai untuk verifikasi pembayaran.');
         }
 
-        $payment->update([
-            'status' => 'verified',
-            'verified_by' => auth()->id(),
-            'verified_at' => now(),
-            'verification_note' => null,
-        ]);
+        DB::transaction(function () use ($payment) {
+            $payment->update([
+                'status' => 'verified',
+                'verified_by' => auth()->id(),
+                'verified_at' => now(),
+                'verification_note' => null,
+            ]);
 
-        $payment->order->update([
-            'status' => 'in_progress',
-            'started_at' => now(),
-        ]);
+            $payment->order->update([
+                'status' => 'in_progress',
+                'started_at' => now(),
+            ]);
+        });
 
         return back()->with('success', 'Pembayaran berhasil diverifikasi.');
     }
 
+    /**
+     * Menolak pembayaran.
+     */
     public function reject(Request $request, $id)
     {
         $request->validate([
@@ -76,24 +91,26 @@ class PaymentController extends Controller
             return back()->with('error', 'Pembayaran ini tidak menunggu verifikasi.');
         }
 
-        if ($payment->order->status != 'pending_payment') {
+        if (!$payment->order || $payment->order->status != 'pending_payment') {
             return back()->with('error', 'Status pesanan tidak sesuai untuk penolakan pembayaran.');
         }
 
-        $payment->update([
-            'status' => 'rejected',
-            'verified_by' => auth()->id(),
-            'verified_at' => now(),
-            'verification_note' => $request->verification_note,
-        ]);
+        DB::transaction(function () use ($payment, $request) {
+            $payment->update([
+                'status' => 'rejected',
+                'verified_by' => auth()->id(),
+                'verified_at' => now(),
+                'verification_note' => $request->verification_note,
+            ]);
 
-        $payment->order->update([
-            'status' => 'payment_rejected',
-        ]);
+            $payment->order->update([
+                'status' => 'pending_payment',
+            ]);
+        });
 
         return back()->with(
             'success',
-            'Bukti pembayaran ditolak. Customer harus membuat pesanan baru.'
+            'Bukti pembayaran ditolak. Customer dapat mengirim ulang bukti pembayaran.'
         );
     }
 }

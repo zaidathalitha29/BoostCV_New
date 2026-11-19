@@ -10,23 +10,45 @@ use App\Category;
 class ServiceController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Menampilkan daftar layanan yang sudah disetujui Admin.
      */
     public function index(Request $request)
     {
-        $services = Service::with(['creator.user', 'category'])
-            ->where('status', 'approved')
-            ->when($request->search, function ($query, $search) {
-                $query->where('title', 'like', '%' . $search . '%');
-            })
-            ->when($request->category, function ($query, $category) {
-                $query->where('category_id', $category);
-            })
-            ->latest()
-            ->paginate(10);
+        $query = Service::query()
+            ->with([
+                'creator.user',
+                'category'
+            ])
+            ->where('status', 'approved');
 
+        // Pencarian berdasarkan judul, deskripsi, dan nama Creator.
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%')
+                    ->orWhereHas('creator', function ($creator) use ($search) {
+                        $creator->where('display_name', 'like', '%' . $search . '%')
+                            ->orWhereHas('user', function ($user) use ($search) {
+                                $user->where('name', 'like', '%' . $search . '%');
+                            });
+                    });
+            });
+        }
+
+        // Filter berdasarkan kategori.
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        // Urutkan layanan terbaru dan gunakan pagination.
+        $services = $query
+            ->latest()
+            ->paginate(10)
+            ->appends($request->query());
+
+        // Ambil kategori aktif untuk pilihan filter.
         $categories = Category::where('is_active', true)
             ->orderBy('name')
             ->get();
@@ -38,35 +60,14 @@ class ServiceController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Menampilkan detail layanan.
      */
     public function show($id)
     {
-        $service = Service::with(['creator.user', 'category'])
+        $service = Service::with([
+                'creator.user',
+                'category'
+            ])
             ->where('status', 'approved')
             ->findOrFail($id);
 
@@ -74,36 +75,30 @@ class ServiceController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Method lainnya belum digunakan.
      */
+    public function create()
+    {
+        abort(404);
+    }
+
+    public function store(Request $request)
+    {
+        abort(404);
+    }
+
     public function edit($id)
     {
-        //
+        abort(404);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        abort(404);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        abort(404);
     }
 }

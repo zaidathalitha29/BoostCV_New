@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
+    /**
+     * Kolom yang boleh diisi.
+     */
     protected $fillable = [
         'order_id',
         'method',
@@ -23,6 +26,9 @@ class Payment extends Model
         'refund_note',
     ];
 
+    /**
+     * Konversi tipe data.
+     */
     protected $casts = [
         'amount' => 'decimal:2',
         'refund_amount' => 'decimal:2',
@@ -30,11 +36,17 @@ class Payment extends Model
         'refunded_at' => 'datetime',
     ];
 
+    /**
+     * Pembayaran milik satu pesanan.
+     */
     public function order()
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Order::class, 'order_id');
     }
 
+    /**
+     * User yang memverifikasi pembayaran.
+     */
     public function verifier()
     {
         return $this->belongsTo(User::class, 'verified_by');

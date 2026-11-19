@@ -3,43 +3,47 @@
 namespace App\Http\Controllers\Creator;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Creator;
 
 class CreatorController extends Controller
 {
     public function profile()
     {
-        $creator = Auth::check()
-            ? Auth::user()->creatorProfile
-            : null;
+        $user = Auth::user();
+        $creator = $user->creatorProfile;
 
-        return view('creator.profile', compact('creator'));
-    }
-
-        
-    public function create()
-    {
-        return view('creator.create-profile');
-    }
-
-
-    public function store(Request $request)
-    {
-        // Pastikan pengguna sudah login
-        if (!Auth::check()) {
-            abort(403, 'Silakan login terlebih dahulu.');
+        if (!$creator) {
+            return redirect()->route('creator.create')
+                ->with('error', 'Silakan buat profil Creator terlebih dahulu.');
         }
 
+        return view('creator.profile', compact('creator', 'user'));
+    }
+
+    public function create()
+    {
         $user = Auth::user();
 
-        // Periksa apakah akun sudah memiliki profil
         if ($user->creatorProfile) {
             return redirect()->route('creator.profile')
                 ->with('error', 'Profil Creator sudah tersedia.');
         }
-        // Validasi data form
+
+        return view('creator.create-profile');
+    }
+
+    public function store(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user->creatorProfile) {
+            return redirect()->route('creator.profile')
+                ->with('error', 'Profil Creator sudah tersedia.');
+        }
+
         $validated = $request->validate([
             'display_name' => 'required|string|max:255',
             'bio' => 'nullable|string',
@@ -49,33 +53,39 @@ class CreatorController extends Controller
             'website' => 'nullable|url|max:255',
             'instagram' => 'nullable|string|max:255',
             'linkedin' => 'nullable|string|max:255',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        // Simpan profil melalui relasi User
-        Creator::create(array_merge($validated, [
-            'user_id' => $user->id,
-        ]));
-        
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')
+                ->store('creators', 'public');
+        }
+
+        $validated['user_id'] = $user->id;
+
+        Creator::create($validated);
+
         return redirect()->route('creator.profile')
             ->with('success', 'Profil berhasil dibuat!');
     }
 
-    
     public function edit()
     {
-        $creator = Auth::user()->creatorProfile;
+        $user = Auth::user();
+        $creator = $user->creatorProfile;
 
         if (!$creator) {
             return redirect()->route('creator.create')
-                ->with('error', 'Silakan buat profil terlebih dahulu.');
+                ->with('error', 'Silakan buat profil Creator terlebih dahulu.');
         }
 
-        return view('creator.edit-profile', compact('creator'));
+        return view('creator.edit-profile', compact('creator', 'user'));
     }
 
     public function update(Request $request)
     {
-        $creator = Auth::user()->creatorProfile;
+        $user = Auth::user();
+        $creator = $user->creatorProfile;
 
         if (!$creator) {
             return redirect()->route('creator.create')
@@ -91,12 +101,21 @@ class CreatorController extends Controller
             'website' => 'nullable|url|max:255',
             'instagram' => 'nullable|string|max:255',
             'linkedin' => 'nullable|string|max:255',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
+
+        if ($request->hasFile('photo')) {
+            if ($creator->photo) {
+                Storage::disk('public')->delete($creator->photo);
+            }
+
+            $validated['photo'] = $request->file('photo')
+                ->store('creators', 'public');
+        }
 
         $creator->update($validated);
 
         return redirect()->route('creator.profile')
             ->with('success', 'Profil berhasil diperbarui!');
     }
-
 }

@@ -1,122 +1,3 @@
-<div class="container py-4">
-
-    <div class="mb-4">
-        <a href="{{ route('customer.orders') }}" class="text-decoration-none">
-            &larr; Kembali ke Pesanan
-        </a>
-        <h3 class="mt-3">Detail Pesanan</h3>
-        <p class="text-muted">Informasi lengkap pesanan layanan CV kamu.</p>
-    </div>
-
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
-
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-
-            <div class="d-flex justify-content-between flex-wrap">
-                <div>
-                    <small class="text-muted">Nomor Pesanan</small>
-                    <h5>{{ $order->order_number }}</h5>
-                </div>
-
-                <div>
-                    <span class="badge badge-primary">
-                        {{ ucfirst(str_replace('_', ' ', $order->status)) }}
-                    </span>
-                </div>
-            </div>
-
-            <hr>
-
-            <h5>Informasi Layanan</h5>
-
-            <table class="table table-borderless">
-                <tr>
-                    <td width="35%">Nama Layanan</td>
-                    <td>: {{ $order->service_title }}</td>
-                </tr>
-                <tr>
-                    <td>Creator</td>
-                    <td>:
-                        {{ optional(optional($order->creator)->user)->name ?? '-' }}
-                    </td>
-                </tr>
-                <tr>
-                    <td>Nama Pemesan</td>
-                    <td>: {{ $order->customer_name }}</td>
-                </tr>
-                <tr>
-                    <td>Harga</td>
-                    <td>: Rp {{ number_format($order->price, 0, ',', '.') }}</td>
-                </tr>
-                <tr>
-                    <td>Catatan</td>
-                    <td>: {{ $order->customer_notes ?: '-' }}</td>
-                </tr>
-            </table>
-
-            <hr>
-
-            <h5>Informasi Pembayaran</h5>
-
-            @if($order->payment)
-                <p class="text-success">
-                    Data pembayaran sudah tercatat.
-                </p>
-            @else
-                <p class="text-muted">
-                    Belum ada data pembayaran.
-                </p>
-            @endif
-
-        </div>
-    </div>
-
-    <div class="card shadow-sm">
-        <div class="card-body">
-
-            <h5 class="mb-3">Aksi Pesanan</h5>
-
-            @if(!in_array($order->status, ['completed', 'cancelled']))
-                <a href="{{ route('customer.cancellations.create', $order->id) }}"
-                   class="btn btn-outline-danger mb-2">
-                    Ajukan Pembatalan
-                </a>
-            @endif
-
-            @if(in_array($order->status, ['revision', 'completed']))
-                <a href="{{ route('customer.revisions.create', $order->id) }}"
-                   class="btn btn-outline-primary mb-2">
-                    Ajukan Revisi
-                </a>
-            @endif
-
-            @if($order->status == 'completed')
-                <a href="{{ route('customer.download', $order->id) }}"
-                   class="btn btn-success mb-2">
-                    Download Hasil CV
-                </a>
-            @endif
-
-            <a href="{{ route('customer.orders') }}"
-               class="btn btn-secondary mb-2">
-                Kembali ke Daftar Pesanan
-            </a>
-
-        </div>
-    </div>
-
-</div>
 
 <!DOCTYPE html>
 <html lang="id">
@@ -129,21 +10,26 @@
 
     <style>
         :root {
-            --navy: #223A66;
-            --navy-dark: #16264A;
-            --gold: #C98A2C;
+            --ink: #1C2434;
+            --ink-soft: #4B5468;
             --paper: #FBFAF7;
             --white: #FFFFFF;
-            --text: #1C2434;
-            --muted: #687184;
-            --border: #E4E1D8;
+            --line: #E4E1D8;
+            --navy: #223A66;
+            --navy-deep: #16264A;
+            --gold: #C98A2C;
+            --gold-soft: #F3E2C2;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             background: var(--paper);
-            color: var(--text);
+            color: var(--ink);
             font-family: 'Inter', sans-serif;
         }
 
@@ -155,14 +41,21 @@
 
         h3, h5 {
             font-family: 'Fraunces', serif;
-            color: var(--navy-dark);
+            color: var(--navy-deep);
         }
 
-        h3 { font-size: 30px; margin: 15px 0 8px; }
-        h5 { font-size: 19px; margin-bottom: 15px; }
+        h3 {
+            font-size: 30px;
+            margin: 15px 0 8px;
+        }
+
+        h5 {
+            font-size: 19px;
+            margin-bottom: 15px;
+        }
 
         .subtitle {
-            color: var(--muted);
+            color: var(--ink-soft);
             font-size: 14px;
             line-height: 1.7;
         }
@@ -174,15 +67,17 @@
             font-weight: 600;
         }
 
-        .back:hover { color: var(--gold); }
+        .back:hover {
+            color: var(--gold);
+        }
 
         .card {
-            background: white;
-            border: 1px solid var(--border);
+            background: var(--white);
+            border: 1px solid var(--line);
             border-radius: 14px;
             padding: 26px;
             margin-top: 25px;
-            box-shadow: 0 5px 20px rgba(22,38,74,.05);
+            box-shadow: 0 5px 20px rgba(22, 38, 74, .05);
         }
 
         .header-order {
@@ -195,10 +90,14 @@
 
         .order-number {
             font-size: 12px;
-            color: var(--muted);
+            color: var(--ink-soft);
         }
 
-        .order-number h5 { margin-top: 5px; }
+        .order-number h5 {
+            margin-top: 5px;
+            margin-bottom: 0;
+            word-break: break-word;
+        }
 
         .badge {
             display: inline-block;
@@ -212,7 +111,7 @@
 
         .divider {
             border: none;
-            border-top: 1px solid var(--border);
+            border-top: 1px solid var(--line);
             margin: 22px 0;
         }
 
@@ -226,11 +125,12 @@
             font-size: 13px;
             vertical-align: top;
             line-height: 1.6;
+            overflow-wrap: anywhere;
         }
 
         td:first-child {
             width: 35%;
-            color: var(--muted);
+            color: var(--ink-soft);
         }
 
         .payment-info {
@@ -238,12 +138,23 @@
             border-radius: 8px;
             background: #F4F6F9;
             font-size: 13px;
-            color: var(--muted);
+            color: var(--ink-soft);
+            line-height: 1.7;
         }
 
         .payment-success {
             background: #E5F4E9;
             color: #246B3E;
+        }
+
+        .payment-warning {
+            background: #FFF3D9;
+            color: #805A16;
+        }
+
+        .payment-danger {
+            background: #FCE8E8;
+            color: #A52B2B;
         }
 
         .actions {
@@ -261,40 +172,93 @@
             text-decoration: none;
             border: 1px solid transparent;
             transition: .2s;
+            cursor: pointer;
         }
 
-        .btn-primary { background: var(--navy); color: white; }
-        .btn-primary:hover { background: var(--navy-dark); }
+        .btn-primary {
+            background: var(--navy);
+            color: white;
+        }
 
-        .btn-danger { background: white; color: #B63B3B; border-color: #B63B3B; }
-        .btn-danger:hover { background: #B63B3B; color: white; }
+        .btn-primary:hover {
+            background: var(--navy-deep);
+        }
 
-        .btn-success { background: #287B50; color: white; }
-        .btn-success:hover { background: #1F633F; }
+        .btn-danger {
+            background: white;
+            color: #B63B3B;
+            border-color: #B63B3B;
+        }
 
-        .btn-secondary { background: #F0F0ED; color: var(--text); }
-        .btn-secondary:hover { background: #E2E2DC; }
+        .btn-danger:hover {
+            background: #B63B3B;
+            color: white;
+        }
+
+        .btn-success {
+            background: #287B50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #1F633F;
+        }
+
+        .btn-secondary {
+            background: #F0F0ED;
+            color: var(--ink);
+        }
+
+        .btn-secondary:hover {
+            background: #E2E2DC;
+        }
 
         .alert {
             padding: 14px 18px;
             border-radius: 8px;
             margin-top: 18px;
             font-size: 13px;
+            line-height: 1.6;
         }
 
-        .alert-success { background: #E5F4E9; color: #246B3E; }
-        .alert-danger { background: #FCE8E8; color: #A52B2B; }
+        .alert-success {
+            background: #E5F4E9;
+            color: #246B3E;
+        }
 
-        @media(max-width: 600px) {
-            .main { padding: 25px 14px; }
-            .card { padding: 18px; }
-            h3 { font-size: 25px; }
-            td:first-child { width: 40%; }
-            .actions { flex-direction: column; }
-            .actions .btn { text-align: center; }
+        .alert-danger {
+            background: #FCE8E8;
+            color: #A52B2B;
+        }
+
+        @media (max-width: 600px) {
+            .main {
+                padding: 25px 14px;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            h3 {
+                font-size: 25px;
+            }
+
+            td:first-child {
+                width: 40%;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .actions .btn {
+                text-align: center;
+            }
         }
     </style>
 </head>
+
 <body>
 
 <main class="main">
@@ -304,14 +268,21 @@
     </a>
 
     <h3>Detail Pesanan</h3>
-    <p class="subtitle">Informasi lengkap pesanan layanan CV kamu.</p>
+
+    <p class="subtitle">
+        Informasi lengkap pesanan layanan CV kamu.
+    </p>
 
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
     @endif
 
     @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
     @endif
 
     <div class="card">
@@ -336,18 +307,26 @@
                 <td>Nama Layanan</td>
                 <td>{{ $order->service_title }}</td>
             </tr>
+
             <tr>
                 <td>Creator</td>
-                <td>{{ optional(optional($order->creator)->user)->name ?? '-' }}</td>
+                <td>
+                    {{ optional(optional($order->creator)->user)->name ?? '-' }}
+                </td>
             </tr>
+
             <tr>
                 <td>Nama Pemesan</td>
                 <td>{{ $order->customer_name }}</td>
             </tr>
+
             <tr>
                 <td>Harga</td>
-                <td>Rp {{ number_format($order->price, 0, ',', '.') }}</td>
+                <td>
+                    Rp {{ number_format($order->price, 0, ',', '.') }}
+                </td>
             </tr>
+
             <tr>
                 <td>Catatan</td>
                 <td>{{ $order->customer_notes ?: '-' }}</td>
@@ -359,45 +338,111 @@
         <h5>Informasi Pembayaran</h5>
 
         @if($order->payment)
-            <div class="payment-info payment-success">
-                Data pembayaran sudah tercatat.
-            </div>
+
+            @if($order->payment->status == 'verified')
+
+                <div class="payment-info payment-success">
+                    <strong>Pembayaran berhasil diverifikasi.</strong>
+                    <br>
+                    Terima kasih, pembayaran pesanan kamu sudah dikonfirmasi Admin.
+                </div>
+
+            @elseif($order->payment->status == 'pending_verification')
+
+                <div class="payment-info payment-warning">
+                    <strong>Pembayaran sedang diperiksa.</strong>
+                    <br>
+                    Bukti pembayaran sudah dikirim. Silakan tunggu verifikasi Admin.
+                </div>
+
+            @elseif($order->payment->status == 'rejected')
+
+                <div class="payment-info payment-danger">
+                    <strong>Pembayaran ditolak.</strong>
+                    <br>
+                    Silakan periksa kembali pembayaran dan kirim ulang bukti pembayaran.
+                    @if($order->payment->verification_note)
+                        <br>
+                        Catatan Admin: {{ $order->payment->verification_note }}
+                    @endif
+                </div>
+
+            @else
+
+                <div class="payment-info">
+                    Status pembayaran:
+                    {{ ucfirst(str_replace('_', ' ', $order->payment->status)) }}
+                </div>
+
+            @endif
+
         @else
+
             <div class="payment-info">
-                Belum ada data pembayaran.
+                Belum ada data pembayaran untuk pesanan ini.
             </div>
+
         @endif
 
     </div>
 
+
     <div class="card">
+
         <h5>Aksi Pesanan</h5>
 
         <div class="actions">
 
+            {{-- TOMBOL PEMBAYARAN --}}
+            @if(
+                $order->status == 'pending_payment' &&
+                (
+                    !$order->payment ||
+                    in_array($order->payment->status, ['unpaid', 'rejected'])
+                )
+            )
+                <a href="{{ route('customer.payments.create', $order->id) }}"
+                   class="btn btn-primary">
+                    Bayar Sekarang
+                </a>
+            @endif
+
+
+            {{-- PEMBATALAN --}}
             @if(!in_array($order->status, ['completed', 'cancelled']))
-                <a href="{{ route('customer.cancellations.create', $order->id) }}" class="btn btn-danger">
+                <a href="{{ route('customer.cancellations.create', $order->id) }}"
+                   class="btn btn-danger">
                     Ajukan Pembatalan
                 </a>
             @endif
 
+
+            {{-- REVISI --}}
             @if(in_array($order->status, ['revision', 'completed']))
-                <a href="{{ route('customer.revisions.create', $order->id) }}" class="btn btn-primary">
+                <a href="{{ route('customer.revisions.create', $order->id) }}"
+                   class="btn btn-primary">
                     Ajukan Revisi
                 </a>
             @endif
 
-           @if($order->status == 'completed' && $order->result_file)
-                <a href="{{ route('customer.download', $order->id) }}" class="btn">
+
+            {{-- DOWNLOAD HASIL --}}
+            @if($order->status == 'completed' && $order->result_file)
+                <a href="{{ route('customer.download', $order->id) }}"
+                   class="btn btn-success">
                     Download Hasil CV
                 </a>
             @endif
 
-            <a href="{{ route('customer.orders') }}" class="btn btn-secondary">
+
+            {{-- KEMBALI --}}
+            <a href="{{ route('customer.orders') }}"
+               class="btn btn-secondary">
                 Kembali ke Daftar Pesanan
             </a>
 
         </div>
+
     </div>
 
 </main>
